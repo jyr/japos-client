@@ -4,16 +4,19 @@
 
 import wx
 
+from controllers.stockrooms import Stock
 # begin wxGlade: extracode
 # end wxGlade
 
 
 
 class Main(wx.Frame):
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, id):
         # begin wxGlade: Main.__init__
-        kwds["style"] = wx.DEFAULT_FRAME_STYLE
-        wx.Frame.__init__(self, *args, **kwds)
+        wx.Frame.__init__(self, parent, id)
+        
+        self.controller = Stock()
+        self.controller.get_stock()
         self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
         self.wp_right = wx.Panel(self.splitter, -1)
         self.panel_4 = wx.Panel(self.wp_right, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
