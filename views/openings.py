@@ -4,7 +4,7 @@
 
 import wx
 
-from stockrooms import Main
+from main import Main
 
 from controllers.openings import Opening
 
