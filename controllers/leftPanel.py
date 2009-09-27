@@ -1,4 +1,5 @@
 import core
+from django.db.models import Q
 from japos.stockrooms.models import StockRoom
 
 class Stock:
@@ -6,17 +7,21 @@ class Stock:
     def __init__(self):
         pass
     
-    def get_stock(self):
-        self.value = {}
+    def get_stock(self, search = None):
+        self.values = []
         
-        #data = StockRoom.objects.values_list('pk','pos__name', 'product__name','barcode', 'stock', 'product__stock', 'product__purchase_price', 'price', 'discount', 'tax','product__description')
-        data = StockRoom.objects.values_list('pk','product__name', 'stock', 'price')
+        if search:
+            data = StockRoom.objects.filter(
+                    Q(product__name__contains = search) |
+                    Q(product__barcode__contains = search)
+                ).values_list('pk','product__name', 'stock', 'price')
+        else:
+            data = StockRoom.objects.values_list('pk','product__name', 'stock', 'price')
         
         for item in data:
-            self.values = {item[0]:(str(item[1]), str(item[2]), str(item[3]))}
-            
-        self.items = self.values.items()
-        return self.items
+            self.values.append((str(item[1]), str(item[2]), str(item[3])))
+
+        return self.values
     
     def get_info_product(self, name):
         self.info_product = StockRoom.objects.get(product__name = name)

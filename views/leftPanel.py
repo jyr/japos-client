@@ -11,7 +11,7 @@ from controllers.leftPanel import Stock
 
 class LeftPanelView(wx.Panel):
     def __init__(self, parent, id):
-        
+        self.parent = parent
         self.controller = Stock()
         self.controller.get_stock()
         
@@ -21,7 +21,7 @@ class LeftPanelView(wx.Panel):
         self.notebook_panel = wx.Panel(self.notebook, -1)
         self.bm_logo = wx.StaticBitmap(self, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/09_64x64.png", wx.BITMAP_TYPE_ANY))
         self.l_japos = wx.StaticText(self, -1, "JAPOS")
-        self.tc_search = wx.TextCtrl(self.notebook_panel, -1, "")
+        self.tc_search = wx.TextCtrl(self.notebook_panel, -1, "", style=wx.TE_PROCESS_ENTER)
         self.l_search = wx.StaticText(self.notebook_panel, -1, "Search...")
         
         self.lc_products = wx.ListCtrl(self.notebook_panel, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
@@ -32,17 +32,14 @@ class LeftPanelView(wx.Panel):
         self.lc_products.SetColumnWidth(1, 50)
         self.lc_products.SetColumnWidth(2, 85)
 
-        for key, data in self.controller.items:
-            index = self.lc_products.InsertStringItem(0, data[0])
-            self.lc_products.SetStringItem(index,1, data[1])
-            self.lc_products.SetStringItem(index,2, data[2])
+        self.OnList()
             
         self.l_info = wx.StaticText(self, -1, "Informacion del producto:")
         self.bm_product = wx.StaticBitmap(self.p_info, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/product.png", wx.BITMAP_TYPE_ANY))
         self.l_name = wx.StaticText(self.p_info, -1, "Nombre")
-        self.l_available = wx.StaticText(self.p_info, -1, "Cantidad disponible")
+        self.l_available = wx.StaticText(self.p_info, -1, "Disponible: ")
         self.l_barcode = wx.StaticText(self.p_info, -1, "codigo")
-        self.l_stock = wx.StaticText(self.p_info, -1, "16 existecia")
+        self.l_stock = wx.StaticText(self.p_info, -1, "Existencia: 16")
         self.sl_1 = wx.StaticLine(self.p_info, -1)
         self.l_psale = wx.StaticText(self.p_info, -1, "Precio venta:")
         self.l_vsale = wx.StaticText(self.p_info, -1, "0")
@@ -50,12 +47,13 @@ class LeftPanelView(wx.Panel):
         self.l_vdiscount = wx.StaticText(self.p_info, -1, "0")
         self.l_pbuy = wx.StaticText(self.p_info, -1, "Precio compra:")
         self.l_vbuy = wx.StaticText(self.p_info, -1, "0")
-        self.l_tax = wx.StaticText(self.p_info, -1, "Impuesto")
+        self.l_tax = wx.StaticText(self.p_info, -1, "Impuesto:")
         self.l_vtax = wx.StaticText(self.p_info, -1, "0")
         self.sl_2 = wx.StaticLine(self.p_info, -1)
         self.l_description = wx.StaticText(self.p_info, -1, "Descripcion del producto aqui")
         
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.lc_products)
+        self.tc_search.Bind(wx.EVT_TEXT_ENTER, self.OnSearch)
 
         self.__set_properties()
         self.__do_layout()
@@ -69,7 +67,17 @@ class LeftPanelView(wx.Panel):
         self.l_info.SetForegroundColour(wx.Colour(255, 255, 255))
         self.l_info.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.l_name.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
-        self.l_available.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        self.l_available.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_barcode.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_stock.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_psale.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_vsale.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_discount.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_vdiscount.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_pbuy.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_vbuy.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_tax.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
+        self.l_vtax.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
         self.p_info.SetBackgroundColour(wx.Colour(255, 255, 255))
         # end wxGlade
 
@@ -90,20 +98,20 @@ class LeftPanelView(wx.Panel):
         self.notebook.AddPage(self.notebook_panel, "Productos")
         s_left.Add(self.notebook, 2, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10)
         s_left.Add(self.l_info, 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 10)
-        s_info_nombre.Add(self.bm_product, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
-        gs_row1.Add(self.l_name, 0, 0, 0)
-        gs_row1.Add(self.l_available, 0, wx.ALIGN_RIGHT, 0)
-        gs_row1.Add(self.l_barcode, 0, 0, 0)
-        gs_row1.Add(self.l_stock, 0, wx.ALIGN_RIGHT, 0)
+        s_info_nombre.Add(self.bm_product, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL, 5)
+        gs_row1.Add(self.l_name, 0, wx.RIGHT|wx.EXPAND, 10)
+        gs_row1.Add(self.l_available, 0, wx.RIGHT|wx.ALIGN_RIGHT, 15)
+        gs_row1.Add(self.l_barcode, 0, wx.RIGHT|wx.EXPAND, 15)
+        gs_row1.Add(self.l_stock, 0, wx.RIGHT|wx.ALIGN_RIGHT, 15)
         gs_row1.AddGrowableCol(0)
         gs_row1.AddGrowableCol(2)
         s_info_nombre.Add(gs_row1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
         s_info.Add(s_info_nombre, 0, wx.EXPAND, 0)
         s_info.Add(self.sl_1, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.EXPAND, 10)
-        gs_row2.Add(self.l_psale, 0, 0, 0)
-        gs_row2.Add(self.l_vsale, 0, 0, 0)
-        gs_row2.Add(self.l_discount, 0, wx.ALIGN_RIGHT, 0)
-        gs_row2.Add(self.l_vdiscount, 0, 0, 0)
+        gs_row2.Add(self.l_psale, 0, 0, 10)
+        gs_row2.Add(self.l_vsale, 0, 0, 10)
+        gs_row2.Add(self.l_discount, 0, 0, 10)
+        gs_row2.Add(self.l_vdiscount, 0, wx.RIGHT|wx.ALIGN_RIGHT, 10)
         gs_row2.Add(self.l_pbuy, 0, 0, 0)
         gs_row2.Add(self.l_vbuy, 0, 0, 0)
         gs_row2.Add(self.l_tax, 0, 0, 0)
@@ -117,14 +125,28 @@ class LeftPanelView(wx.Panel):
         self.SetSizer(s_left)
         s_left.Fit(self)
         # end wxGlade
-    
+
+    def OnSearch(self, evt):
+        self.lc_products.DeleteAllItems()
+        name = self.tc_search.GetValue()
+        self.controller.get_stock(name)
+        self.OnList()
+
+    def OnList(self):
+        for data in self.controller.values:
+            index = self.lc_products.InsertStringItem(0, data[0])
+            self.lc_products.SetStringItem(index,1, data[1])
+            self.lc_products.SetStringItem(index,2, data[2])
+            
     def OnItemSelected(self, evt):
         self.currentItem = evt.m_itemIndex
         name = self.lc_products.GetItemText(self.currentItem)
+        self.OnSetInfoProduct(name)
+        
+    
+    def OnSetInfoProduct(self, name):
         self.controller.get_info_product(name)
-        #item2 = self.lc_products.GetItem(self.currentItem,1)
-        #item3 = self.lc_products.GetItem(self.currentItem,2)
-
+        self.p_info.Layout()
         self.l_name.SetLabel(self.controller.info_product.product.name)
         self.l_available.SetLabel(" Disponible "+str(self.controller.info_product.product.stock))
         self.l_barcode.SetLabel(str(self.controller.info_product.product.barcode))
