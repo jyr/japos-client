@@ -19,7 +19,7 @@ class Stock:
             data = StockRoom.objects.values_list('pk','product__name', 'stock', 'price')
         
         for item in data:
-            self.values.append((str(item[1]), str(item[2]), str(item[3])))
+            self.values.append((unicode(item[1]), unicode(item[2]), unicode(item[3])))
 
         return self.values
     
