@@ -19,12 +19,13 @@ class SalesListView(wx.Panel):
         self.controller.get_sales()
         self.controller.get_total_products()
         self.controller.get_total_all()
-        self.controller.get_price_product_all()
-        self.controller.get_amount_product_all()
-        self.controller.get_subtotal_all()
-        self.controller.get_tax_product_all()
-        self.controller.get_tax_value_all()
-        self.controller.get_price_discount_all()
+        #self.controller.get_price_product_all()
+        #self.controller.get_amount_product_all()
+        #self.controller.get_subtotal_all()
+        #self.controller.get_tax_product_all()
+        #self.controller.get_tax_value_all()
+        #self.controller.get_price_discount_all()
+        #self.controller.get_sale_price()
                 
         self.l_venta = wx.StaticText(self, -1, "Ventas")
         self.lc_saleslist = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
@@ -41,7 +42,7 @@ class SalesListView(wx.Panel):
         self.lc_saleslist.SetColumnWidth(4, 100)
         self.lc_saleslist.SetColumnWidth(5, 200)
         
-#        self.OnList()
+        self.OnList()
         
         self.__set_properties()
         self.__do_layout()
@@ -62,10 +63,13 @@ class SalesListView(wx.Panel):
         # end wxGlade
 
     def OnList(self):
-        for data in self.controller.values:
-            index = self.lc_products.InsertStringItem(0, data[0])
-            self.lc_products.SetStringItem(index,1, data[1])
-            self.lc_products.SetStringItem(index,2, data[2])
+        for i in range(0, len(self.controller.sales)):
+            index = self.lc_saleslist.InsertStringItem(0, '')
+            self.lc_saleslist.SetStringItem(index,1, '')
+            self.lc_saleslist.SetStringItem(index,2, unicode(self.controller.sales[i][1]))
+            self.lc_saleslist.SetStringItem(index,3, unicode(self.controller.sales[i][2]))
+            self.lc_saleslist.SetStringItem(index,4, unicode(self.controller.total_products[i]['amount__sum']))
+            self.lc_saleslist.SetStringItem(index,5, unicode(self.controller.total[i]))
 # end of class SalesListView
 
 
