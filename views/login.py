@@ -81,13 +81,16 @@ class LoginView(wx.Frame):
         # end wxGlade
 
     def OnAuth(self, evt):
-        username = self.cb_username.GetValue().encode('utf-8')
-        password = self.tc_password.GetValue().encode('utf-8')
-        
-        self.controller.auth(username, password)
-        self.p_data.Destroy()
-        self.p_header.Destroy()
-        opening = OpeningView(self, -1)
+		username = self.cb_username.GetValue().encode('utf-8')
+		password = self.tc_password.GetValue().encode('utf-8')
+		try:
+			self.valid = self.controller.auth(username, password)
+			if self.valid:
+				self.p_data.Destroy()
+				self.p_header.Destroy()
+				opening = OpeningView(self, -1)
+		except: #japos.crews.models.DoesNotExist:
+			self.controller.error()
         
 def main():
     app = wx.PySimpleApp(0)

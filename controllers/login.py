@@ -1,9 +1,9 @@
 import core
 from django.contrib.auth.models import check_password
 from japos.crews.models import Employee
+from helpers.message import Message
 
 class Login:
-    
     def __init__(self):
         pass
     
@@ -11,4 +11,7 @@ class Login:
         self.username = Employee.objects.get(user__username = username)
         self.valid = check_password(password, self.username.user.password)
         
-        return self.username, self.valid
+        return self.valid
+
+    def error(self):
+		Message("Invalid username or password. Please try again")
