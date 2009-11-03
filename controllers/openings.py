@@ -23,7 +23,7 @@ class Opening:
         if category == 1: 
             data = Pos.objects.values_list('id','name')
         if category == 2:
-            data = Employee.objects.filter(user__groups=4).values_list('pk','user__username')
+            data = Employee.objects.filter(user__groups=4).exclude(user__groups=3).values_list('pk','user__username')
         if category == 3:
             data = Employee.objects.filter(user__groups=3).values_list('pk','user__username')
             
