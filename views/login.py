@@ -89,6 +89,8 @@ class LoginView(wx.Frame):
 				self.p_data.Destroy()
 				self.p_header.Destroy()
 				opening = OpeningView(self, -1)
+			else:
+				self.controller.error()
 		except: #japos.crews.models.DoesNotExist:
 			self.controller.error()
         
