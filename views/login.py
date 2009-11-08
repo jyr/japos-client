@@ -3,7 +3,7 @@
 
 import wx
 
-from openings import OpeningView
+from openings import Opening_view
 
 from controllers.login import Login
 # begin wxGlade: extracode
@@ -11,7 +11,7 @@ from controllers.login import Login
 
 
 
-class LoginView(wx.Frame):
+class Login_view(wx.Frame):
     def __init__(self, parent, id):
         # begin wxGlade: Login.__init__
         wx.Frame.__init__(self,  parent, id, style=wx.DEFAULT_FRAME_STYLE ^(wx.MAXIMIZE_BOX))
@@ -88,7 +88,7 @@ class LoginView(wx.Frame):
 			if self.valid:
 				self.p_data.Destroy()
 				self.p_header.Destroy()
-				opening = OpeningView(self, -1)
+				opening = Opening_view(self, -1)
 			else:
 				self.controller.error()
 		except: #japos.crews.models.DoesNotExist:
@@ -96,7 +96,7 @@ class LoginView(wx.Frame):
         
 def main():
     app = wx.PySimpleApp(0)
-    f_login = LoginView(None, -1)
+    f_login = Login_view(None, -1)
     f_login.Show()
     app.MainLoop()
 # end of class Login

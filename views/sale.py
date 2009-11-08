@@ -9,9 +9,9 @@ import wx
 
 
 
-class SaleView(wx.Panel):
+class Sale_view(wx.Panel):
     def __init__(self, *args, **kwds):
-        # begin wxGlade: SaleView.__init__
+        # begin wxGlade: Sale_view.__init__
         kwds["style"] = wx.TAB_TRAVERSAL
         wx.Panel.__init__(self, *args, **kwds)
         self.p_toolbarinf = wx.Panel(self, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
@@ -36,7 +36,7 @@ class SaleView(wx.Panel):
         # end wxGlade
 
     def __set_properties(self):
-        # begin wxGlade: SaleView.__set_properties
+        # begin wxGlade: Sale_view.__set_properties
         self.l_sale.SetFont(wx.Font(20, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
         self.l_subtotal.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.l_tax.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
@@ -52,7 +52,7 @@ class SaleView(wx.Panel):
         # end wxGlade
 
     def __do_layout(self):
-        # begin wxGlade: SaleView.__do_layout
+        # begin wxGlade: Sale_view.__do_layout
         s_sale = wx.BoxSizer(wx.VERTICAL)
         sizer_7 = wx.FlexGridSizer(1, 6, 0, 0)
         s_total = wx.BoxSizer(wx.HORIZONTAL)
@@ -86,6 +86,6 @@ class SaleView(wx.Panel):
         s_sale.Fit(self)
         # end wxGlade
 
-# end of class SaleView
+# end of class Sale_view
 
 

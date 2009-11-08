@@ -4,15 +4,15 @@
 
 import wx
 
-from views.salesList import SalesListView
+from views.salesList import SalesList_view
 # begin wxGlade: extracode
 # end wxGlade
 
 
 
-class RightPanelView(wx.Panel):
+class RightPanel_view(wx.Panel):
     def __init__(self, *args, **kwds):
-        # begin wxGlade: RightPanelView.__init__
+        # begin wxGlade: RightPanel_view.__init__
         kwds["style"] = wx.TAB_TRAVERSAL
         wx.Panel.__init__(self, *args, **kwds)
         self.p_maintoolbar = wx.Panel(self, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
@@ -22,14 +22,14 @@ class RightPanelView(wx.Panel):
         self.bm_addsale = wx.BitmapButton(self.p_maintoolbar, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/add.png", wx.BITMAP_TYPE_ANY))
         self.sl_2 = wx.StaticLine(self.p_maintoolbar, -1)
         self.bm_cancel = wx.BitmapButton(self.p_maintoolbar, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/cancellation.png", wx.BITMAP_TYPE_ANY))
-        self.p_content = SalesListView(self, -1)
+        self.p_content = SalesList_view(self, -1)
 
         self.__set_properties()
         self.__do_layout()
         # end wxGlade
 
     def __set_properties(self):
-        # begin wxGlade: RightPanelView.__set_properties
+        # begin wxGlade: RightPanel_view.__set_properties
         self.bm_opening.SetSize(self.bm_opening.GetBestSize())
         self.sl_1.SetMinSize((1, 70))
         self.tc_searchsale.SetMinSize((450, 30))
@@ -40,7 +40,7 @@ class RightPanelView(wx.Panel):
         # end wxGlade
 
     def __do_layout(self):
-        # begin wxGlade: RightPanelView.__do_layout
+        # begin wxGlade: RightPanel_view.__do_layout
         s_right = wx.BoxSizer(wx.VERTICAL)
         s_maintoolbar = wx.FlexGridSizer(1, 6, 0, 0)
         s_maintoolbar.Add(self.bm_opening, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
@@ -60,7 +60,7 @@ class RightPanelView(wx.Panel):
         s_right.Fit(self)
         # end wxGlade
 
-# end of class RightPanelView
+# end of class RightPanel_view
 
 
 class MainToolBar(wx.ToolBar):

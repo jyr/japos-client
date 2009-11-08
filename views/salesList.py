@@ -10,22 +10,15 @@ from controllers.salesList import SalesList
 
 
 
-class SalesListView(wx.Panel):
+class SalesList_view(wx.Panel):
     def __init__(self, parent, id):
-        # begin wxGlade: SalesListView.__init__
+        # begin wxGlade: SalesList_view.__init__
         wx.Panel.__init__(self, parent, id)
         
         self.controller = SalesList()
         self.controller.get_sales()
         self.controller.get_total_products()
         self.controller.get_total_all()
-        #self.controller.get_price_product_all()
-        #self.controller.get_amount_product_all()
-        #self.controller.get_subtotal_all()
-        #self.controller.get_tax_product_all()
-        #self.controller.get_tax_value_all()
-        #self.controller.get_price_discount_all()
-        #self.controller.get_sale_price()
                 
         self.l_venta = wx.StaticText(self, -1, "Ventas")
         self.lc_saleslist = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
@@ -49,12 +42,12 @@ class SalesListView(wx.Panel):
         # end wxGlade
 
     def __set_properties(self):
-        # begin wxGlade: SalesListView.__set_properties
+        # begin wxGlade: SalesList_view.__set_properties
         self.l_venta.SetFont(wx.Font(20, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
         # end wxGlade
 
     def __do_layout(self):
-        # begin wxGlade: SalesListView.__do_layout
+        # begin wxGlade: SalesList_view.__do_layout
         s_saleslist = wx.BoxSizer(wx.VERTICAL)
         s_saleslist.Add(self.l_venta, 0, wx.ALL, 10)
         s_saleslist.Add(self.lc_saleslist, 1, wx.EXPAND, 10)
@@ -70,6 +63,6 @@ class SalesListView(wx.Panel):
             self.lc_saleslist.SetStringItem(index,3, unicode(self.controller.sales[i][2]))
             self.lc_saleslist.SetStringItem(index,4, unicode(self.controller.total_products[i]['amount__sum']))
             self.lc_saleslist.SetStringItem(index,5, unicode(self.controller.total[i]))
-# end of class SalesListView
+# end of class SalesList_view
 
 

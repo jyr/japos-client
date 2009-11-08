@@ -2,16 +2,16 @@
 # -*- coding: us-ascii -*-
 
 import wx
-from views.leftPanel import LeftPanelView
-from views.rightPanel import RightPanelView
+from views.leftPanel import LeftPanel_view
+from views.rightPanel import RightPanel_view
 
 class Main(wx.Frame):
     def __init__(self, parent, id):
         wx.Frame.__init__(self, parent, id)
         self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
         
-        self.wp_left = LeftPanelView(self.splitter, -1)
-        self.wp_right = RightPanelView(self.splitter, -1)
+        self.wp_left = LeftPanel_view(self.splitter, -1)
+        self.wp_right = RightPanel_view(self.splitter, -1)
                 
         self.__set_properties()
         self.__do_layout()

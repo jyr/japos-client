@@ -6,18 +6,19 @@ import wx
 
 from main import Main
 
-from controllers.openings import Opening
+from controllers.openings import Opening_controller
+
 
 # begin wxGlade: extracode
 # end wxGlade
 
 
-class OpeningView(wx.Panel):
+class Opening_view(wx.Panel):
     def __init__(self,  parent, id):
         # begin wxGlade: Opening.__init__
         wx.Panel.__init__(self,  parent, id)
 
-        self.controller = Opening()
+        self.controller = Opening_controller()
         self.parent = parent
         
         self.p_inputs = wx.Panel(self, -1)
@@ -91,9 +92,18 @@ class OpeningView(wx.Panel):
         # end wxGlade
         
     def OnCreateOpening(self, evt):
-        self.main = Main(None, -1)
-        self.main.Show()
-        self.parent.Close()
+		try:
+			pos = self.cb_pos.GetValue()
+			cashier = self.cb_cashier.GetValue()
+			auditor = self.cb_auditor.GetValue()
+			initialfund = self.tc_initialfund.GetValue()
+			
+			self.controller.create_opening(pos, cashier, auditor, initialfund)
+			self.main = Main(None, -1)
+			self.main.Show()
+			self.parent.Close()
+		except wx._core.PyAssertionError:
+			self.controller.error()
         
 
 # end of class Opening

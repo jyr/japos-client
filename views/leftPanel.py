@@ -9,7 +9,7 @@ from controllers.leftPanel import Stock
 
 
 
-class LeftPanelView(wx.Panel):
+class LeftPanel_view(wx.Panel):
     def __init__(self, parent, id):
         self.parent = parent
         self.controller = Stock()
@@ -60,7 +60,7 @@ class LeftPanelView(wx.Panel):
         # end wxGlade
 
     def __set_properties(self):
-        # begin wxGlade: LeftPanelView.__set_properties
+        # begin wxGlade: LeftPanel_view.__set_properties
         self.l_japos.SetForegroundColour(wx.Colour(255, 255, 255))
         self.l_japos.SetFont(wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
         self.l_search.SetForegroundColour(wx.Colour(255, 255, 255))
@@ -82,7 +82,7 @@ class LeftPanelView(wx.Panel):
         # end wxGlade
 
     def __do_layout(self):
-        # begin wxGlade: LeftPanelView.__do_layout
+        # begin wxGlade: LeftPanel_view.__do_layout
         s_left = wx.BoxSizer(wx.VERTICAL)
         s_info = wx.BoxSizer(wx.VERTICAL)
         gs_row2 = wx.FlexGridSizer(2, 4, 0, 0)
@@ -156,6 +156,6 @@ class LeftPanelView(wx.Panel):
         self.l_vbuy.SetLabel(str(self.controller.info_product.product.purchase_price))
         self.l_vtax.SetLabel(str(self.controller.info_product.tax))
         self.l_description.SetLabel(str(self.controller.info_product.product.description))
-# end of class LeftPanelView
+# end of class LeftPanel_view
 
 
