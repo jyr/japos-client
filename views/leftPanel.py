@@ -4,6 +4,9 @@
 
 import wx
 from controllers.leftPanel import Stock
+from views.rightPanel import RightPanel_view
+from views.sale import Sale_view
+
 # begin wxGlade: extracode
 # end wxGlade
 
@@ -12,6 +15,7 @@ from controllers.leftPanel import Stock
 class LeftPanel_view(wx.Panel):
     def __init__(self, parent, id):
         self.parent = parent
+        self.GetParent = self.parent.GetParent()
         self.controller = Stock()
         self.controller.get_stock()
         
@@ -53,6 +57,7 @@ class LeftPanel_view(wx.Panel):
         self.l_description = wx.StaticText(self.p_info, -1, "Descripcion del producto aqui")
         
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.lc_products)
+        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated, self.lc_products)
         self.tc_search.Bind(wx.EVT_TEXT_ENTER, self.OnSearch)
 
         self.__set_properties()
@@ -139,11 +144,23 @@ class LeftPanel_view(wx.Panel):
             self.lc_products.SetStringItem(index,2, data[2])
             
     def OnItemSelected(self, evt):
-        self.currentItem = evt.m_itemIndex
-        name = self.lc_products.GetItemText(self.currentItem)
-        self.OnSetInfoProduct(name)
-        
-    
+	    """
+	    Selecciona un producto y muestra su informacion a detalle
+	    """
+	    self.currentItem = evt.m_itemIndex
+	    name = self.lc_products.GetItemText(self.currentItem)
+	    self.OnSetInfoProduct(name)
+
+    def OnItemActivated(self, evt):
+	    """
+	    Agrega un producto a la venta, cuando presionan enter sobre el producto
+	    o al dar doble click sobre el.
+	    """
+	    if self.GetParent.wp_right.statusSale:
+		    print "Agregando el producto..."
+	    else:
+			print "Crear venta"
+
     def OnSetInfoProduct(self, name):
         self.controller.get_info_product(name)
         self.p_info.Layout()

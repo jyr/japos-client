@@ -5,16 +5,18 @@
 import wx
 
 from views.salesList import SalesList_view
+from views.sale import Sale_view
 # begin wxGlade: extracode
 # end wxGlade
 
 
 
 class RightPanel_view(wx.Panel):
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, id):
         # begin wxGlade: RightPanel_view.__init__
-        kwds["style"] = wx.TAB_TRAVERSAL
-        wx.Panel.__init__(self, *args, **kwds)
+        self.statusSale = False
+
+        wx.Panel.__init__(self, parent, id)
         self.p_maintoolbar = wx.Panel(self, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
         self.bm_opening = wx.BitmapButton(self.p_maintoolbar, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/opening.png", wx.BITMAP_TYPE_ANY))
         self.sl_1 = wx.StaticLine(self.p_maintoolbar, -1)
@@ -23,6 +25,9 @@ class RightPanel_view(wx.Panel):
         self.sl_2 = wx.StaticLine(self.p_maintoolbar, -1)
         self.bm_cancel = wx.BitmapButton(self.p_maintoolbar, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/cancellation.png", wx.BITMAP_TYPE_ANY))
         self.p_content = SalesList_view(self, -1)
+
+        self.Bind(wx.EVT_BUTTON, self.OnNewSale, id = self.bm_addsale.GetId())
+        self.Bind(wx.EVT_BUTTON, self.OnCancelSale, id = self.bm_cancel.GetId())
 
         self.__set_properties()
         self.__do_layout()
@@ -41,7 +46,7 @@ class RightPanel_view(wx.Panel):
 
     def __do_layout(self):
         # begin wxGlade: RightPanel_view.__do_layout
-        s_right = wx.BoxSizer(wx.VERTICAL)
+        self.s_right = wx.BoxSizer(wx.VERTICAL)
         s_maintoolbar = wx.FlexGridSizer(1, 6, 0, 0)
         s_maintoolbar.Add(self.bm_opening, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
         s_maintoolbar.Add(self.sl_1, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10)
@@ -54,10 +59,27 @@ class RightPanel_view(wx.Panel):
         s_maintoolbar.AddGrowableCol(1)
         s_maintoolbar.AddGrowableCol(2)
         s_maintoolbar.AddGrowableCol(3)
-        s_right.Add(self.p_maintoolbar, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
-        s_right.Add(self.p_content, 1, wx.EXPAND, 10)
-        self.SetSizer(s_right)
-        s_right.Fit(self)
+        self.s_right.Add(self.p_maintoolbar, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
+        self.s_right.Add(self.p_content, 1, wx.EXPAND, 10)
+        self.SetSizer(self.s_right)
+        self.s_right.Fit(self)
+
+    def OnNewSale(self, evt):
+	    self.statusSale = True
+	    self.bm_addsale.Disable()
+	    self.p_content.Destroy()
+	    self.p_content = Sale_view(self, -1)
+	    self.s_right.Add(self.p_content, 1, wx.EXPAND, 10)
+	    self.Layout()
+
+    def OnCancelSale(self):
+	    self.bm_addsale.Enable()
+	    self.statusSale = False
+	    self.p_content.Destroy()
+	    self.p_content = SalesList_view(self, -1)
+	    self.s_right.Add(self.p_content, 1, wx.EXPAND, 10)
+	    self.Layout()
+	    
         # end wxGlade
 
 # end of class RightPanel_view

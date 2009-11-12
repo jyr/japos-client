@@ -14,9 +14,9 @@ class Stock:
             data = StockRoom.objects.filter(
                     Q(product__name__contains = search) |
                     Q(product__barcode__contains = search)
-                ).values_list('pk','product__name', 'stock', 'price')
+                ).values_list('pk','product__name', 'price', 'stock')
         else:
-            data = StockRoom.objects.values_list('pk','product__name', 'stock', 'price')
+            data = StockRoom.objects.values_list('pk','product__name', 'price', 'stock')
         
         for item in data:
             self.values.append((unicode(item[1]), unicode(item[2]), unicode(item[3])))
