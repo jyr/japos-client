@@ -17,6 +17,16 @@ class Sale_view(wx.Panel):
         self.p_total = wx.Panel(self, -1)
         self.l_sale = wx.StaticText(self, -1, "Venta 2009-22")
         self.lc_sale = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
+
+        self.lc_sale.InsertColumn(0, "Name")
+        self.lc_sale.SetColumnWidth(0, 480)
+        self.lc_sale.InsertColumn(1, "Amount")
+        self.lc_sale.SetColumnWidth(1, 100)
+        self.lc_sale.InsertColumn(2, "Price")
+        self.lc_sale.SetColumnWidth(2, 150)
+        self.lc_sale.InsertColumn(3, "Total")
+        self.lc_sale.SetColumnWidth(3, 150)
+
         self.l_subtotal = wx.StaticText(self.p_total, -1, "Subtotal:")
         self.l_tax = wx.StaticText(self.p_total, -1, "Impuesto:")
         self.l_total = wx.StaticText(self.p_total, -1, "Total:")
