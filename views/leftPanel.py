@@ -4,6 +4,7 @@
 
 import wx
 from controllers.leftPanel import Stock
+from controllers.sale import Sale
 from views.rightPanel import RightPanel_view
 from views.sale import Sale_view
 
@@ -18,6 +19,7 @@ class LeftPanel_view(wx.Panel):
         self.GetParent = self.parent.GetParent()
         self.controller = Stock()
         self.controller.get_stock()
+        self.controller_sale = Sale()
         
         wx.Panel.__init__(self, parent, id)
         self.p_info = wx.Panel(self, -1, style=wx.DOUBLE_BORDER|wx.TAB_TRAVERSAL)
@@ -161,7 +163,7 @@ class LeftPanel_view(wx.Panel):
 		    name = self.lc_products.GetItemText(self.currentItem)
 		    price = self.__getColumnText(self.lc_products, self.currentItem,1)
 		    stock = self.__getColumnText(self.lc_products, self.currentItem,2)
-		    self.__insertProduct(self.currentItem, name, price)
+		    amount = self.__insertProduct(self.currentItem, name, price)
 		    print "Agregando el producto..."
 	    else:
 			print "Crear venta"
@@ -192,6 +194,26 @@ class LeftPanel_view(wx.Panel):
 		    subtotal += float(self.__getColumnText(lc, i, 3))
 		
 	    self.subtotal.SetLabel(str(subtotal))
+	    return subtotal
+
+    def __get_tax_total(self, lc):
+	    self.taxtotal = self.GetParent.wp_right.p_content.l_vstax
+	    count = int(lc.GetItemCount())
+	    totalTax = 0
+	    
+	    for i in range(0, count):
+		    name = self.__getColumnText(lc, i, 0)
+		    amount = int(self.__getColumnText(lc, i, 1))
+		    price = float(self.__getColumnText(lc, i, 2))
+		    totalTax += self.controller_sale.get_tax_product(name, amount, price)
+
+	    self.taxtotal.SetLabel(str(totalTax))
+	    return totalTax
+
+    def __get_total_sale(self, totalTax, subtotal):
+	    self.saletotal = self.GetParent.wp_right.p_content.l_vtotal
+	    total = totalTax + subtotal
+	    self.saletotal.SetLabel(str(total))
 
     def __insertProduct(self,currentIndex, name, price):
 	    self.lc_sale = self.GetParent.wp_right.p_content.lc_sale
@@ -203,17 +225,21 @@ class LeftPanel_view(wx.Panel):
 	        self.lc_sale.SetStringItem(index, 1, "1")
 	        self.lc_sale.SetStringItem(index, 2, price)
 	        self.lc_sale.SetStringItem(index, 3, price)
+	        amount = 1
 	    elif foundIndex == -1:
 	        index = self.lc_sale.InsertStringItem(0,name)
 	        self.lc_sale.SetStringItem(index, 1, "1")
 	        self.lc_sale.SetStringItem(index, 2, price)
 	        self.lc_sale.SetStringItem(index, 3, price)
+	        amount = 1
             else:
 	            amount = int(self.__getColumnText(self.lc_sale, foundIndex, 1)) + 1
 	            self.__setColumnText(self.lc_sale, foundIndex, 1, str(amount))
 	            self.__getTotal(self.lc_sale, foundIndex, 3, amount, price)
 	
-	    self.__getSubTotal(self.lc_sale)
+	    subtotal = self.__getSubTotal(self.lc_sale)
+	    taxTotal = self.__get_tax_total(self.lc_sale)
+	    self.__get_total_sale(taxTotal, subtotal)
 
     def __searchProduct(self, name):
 	    foundIndex = self.lc_sale.FindItem(-1, name, True)
