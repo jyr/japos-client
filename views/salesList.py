@@ -13,6 +13,8 @@ from controllers.salesList import SalesList
 class SalesList_view(wx.Panel):
     def __init__(self, parent, id):
         # begin wxGlade: SalesList_view.__init__
+        self.parent = parent
+        self.list_sales_current = self.parent.list_sales_current
         wx.Panel.__init__(self, parent, id)
         
         self.controller = SalesList()
@@ -23,7 +25,7 @@ class SalesList_view(wx.Panel):
         self.l_venta = wx.StaticText(self, -1, "Ventas")
         self.lc_saleslist = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
         self.lc_saleslist.InsertColumn(0,'') 
-        self.lc_saleslist.InsertColumn(1,'')
+        self.lc_saleslist.InsertColumn(1,'id')
         self.lc_saleslist.InsertColumn(2,'SKU')
         self.lc_saleslist.InsertColumn(3,'Venta')
         self.lc_saleslist.InsertColumn(4,'Productos')
@@ -35,7 +37,7 @@ class SalesList_view(wx.Panel):
         self.lc_saleslist.SetColumnWidth(4, 100)
         self.lc_saleslist.SetColumnWidth(5, 200)
         
-        self.OnList()
+        self.list_sales()
         
         self.__set_properties()
         self.__do_layout()
@@ -55,14 +57,23 @@ class SalesList_view(wx.Panel):
         s_saleslist.Fit(self)
         # end wxGlade
 
-    def OnList(self):
-        for i in range(0, len(self.controller.sales)):
-            index = self.lc_saleslist.InsertStringItem(0, '')
-            self.lc_saleslist.SetStringItem(index,1, '')
-            self.lc_saleslist.SetStringItem(index,2, unicode(self.controller.sales[i][1]))
-            self.lc_saleslist.SetStringItem(index,3, unicode(self.controller.sales[i][2]))
-            self.lc_saleslist.SetStringItem(index,4, unicode(self.controller.total_products[i]['amount__sum']))
-            self.lc_saleslist.SetStringItem(index,5, unicode(self.controller.total[i]))
+    def list_sales(self):
+	    """
+	    Obtiene la lista de ventas por pos al iniciar el turno
+	    y crea la lista que guardara la lista de ventas actuales
+	    """
+	    if not self.list_sales_current:
+		    for i in range(0, len(self.controller.sales)):
+			    self.list_sales_current.append({'id': i+1,'sku': unicode(self.controller.sales[i][1]), 'sale': unicode(self.controller.sales[i][2]), 'amount': unicode(self.controller.total_products[i]['amount__sum']), 'total':unicode(self.controller.total[i]), 'products': []})
+
+		    for item in self.list_sales_current:
+			    index = self.lc_saleslist.InsertStringItem(0, '')
+			    self.lc_saleslist.SetStringItem(index,1, unicode(item['id']))
+			    self.lc_saleslist.SetStringItem(index,2, unicode(item['sku']))
+			    self.lc_saleslist.SetStringItem(index,3, unicode(item['sale']))
+			    self.lc_saleslist.SetStringItem(index,4, unicode(item['amount']))
+			    self.lc_saleslist.SetStringItem(index,5, unicode(item['total']))
+
 # end of class SalesList_view
 
 

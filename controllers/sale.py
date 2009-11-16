@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import core
 from japos.stockrooms.models import StockRoom
 

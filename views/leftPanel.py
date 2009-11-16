@@ -7,6 +7,7 @@ from controllers.leftPanel import Stock
 from controllers.sale import Sale
 from views.rightPanel import RightPanel_view
 from views.sale import Sale_view
+from helpers.sale import Sale_helper
 
 # begin wxGlade: extracode
 # end wxGlade
@@ -20,6 +21,7 @@ class LeftPanel_view(wx.Panel):
         self.controller = Stock()
         self.controller.get_stock()
         self.controller_sale = Sale()
+        self.helpers_sale = Sale_helper(self.GetParent, self.controller_sale)
         
         wx.Panel.__init__(self, parent, id)
         self.p_info = wx.Panel(self, -1, style=wx.DOUBLE_BORDER|wx.TAB_TRAVERSAL)
@@ -38,7 +40,7 @@ class LeftPanel_view(wx.Panel):
         self.lc_products.SetColumnWidth(1, 50)
         self.lc_products.SetColumnWidth(2, 85)
 
-        self.OnList()
+        self.list_products()
             
         self.l_info = wx.StaticText(self, -1, "Informacion del producto:")
         self.bm_product = wx.StaticBitmap(self.p_info, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/product.png", wx.BITMAP_TYPE_ANY))
@@ -58,9 +60,9 @@ class LeftPanel_view(wx.Panel):
         self.sl_2 = wx.StaticLine(self.p_info, -1)
         self.l_description = wx.StaticText(self.p_info, -1, "Descripcion del producto aqui")
         
-        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnGetProductInfo, self.lc_products)
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnAddProductSale, self.lc_products)
-        self.tc_search.Bind(wx.EVT_TEXT_ENTER, self.OnSearch)
+        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.get_product_info, self.lc_products)
+        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.add_product_sale, self.lc_products)
+        self.tc_search.Bind(wx.EVT_TEXT_ENTER, self.search)
 
         self.__set_properties()
         self.__do_layout()
@@ -133,27 +135,27 @@ class LeftPanel_view(wx.Panel):
         s_left.Fit(self)
         # end wxGlade
 
-    def OnSearch(self, evt):
+    def search(self, evt):
         self.lc_products.DeleteAllItems()
         name = self.tc_search.GetValue()
         self.controller.get_stock(name)
-        self.OnList()
+        self.list_products()
 
-    def OnList(self):
+    def list_products(self):
         for data in self.controller.values:
             index = self.lc_products.InsertStringItem(0, data[0])
             self.lc_products.SetStringItem(index,1, data[1])
             self.lc_products.SetStringItem(index,2, data[2])
             
-    def OnGetProductInfo(self, evt):
+    def get_product_info(self, evt):
 	    """
 	    Selecciona un producto y muestra su informacion a detalle
 	    """
 	    self.currentItem = evt.m_itemIndex
 	    name = self.lc_products.GetItemText(self.currentItem)
-	    self.OnSetInfoProduct(name)
+	    self.set_info_product(name)
 
-    def OnAddProductSale(self, evt):
+    def add_product_sale(self, evt):
 	    """
 	    Agrega un producto a la venta, cuando presionan enter sobre el producto
 	    o al dar doble click sobre el.
@@ -161,91 +163,14 @@ class LeftPanel_view(wx.Panel):
 	    if self.GetParent.wp_right.statusSale:
 		    self.currentItem = evt.m_itemIndex
 		    name = self.lc_products.GetItemText(self.currentItem)
-		    price = self.__getColumnText(self.lc_products, self.currentItem,1)
-		    stock = self.__getColumnText(self.lc_products, self.currentItem,2)
-		    amount = self.__insertProduct(self.currentItem, name, price)
+		    price = self.helpers_sale.get_column_text(self.lc_products, self.currentItem,1)
+		    stock = self.helpers_sale.get_column_text(self.lc_products, self.currentItem,2)
+		    amount = self.helpers_sale.insert_product(self.currentItem, name, price)
 		    print "Agregando el producto..."
 	    else:
 			print "Crear venta"
 
-    def __getColumnText(self, lc, index, col):
-	    """
-	    Obtiene el valor de la columna del item seleccionado
-	    """
-	    item = lc.GetItem(index, col)
-	    return item.GetText()
-
-    def __setColumnText(self, lc, index, col, value):
-	    """
-	    Asigna un valor a la columna del item seleccionado
-	    """
-	    lc.SetStringItem(index, col, value)
-
-    def __getTotal(self, lc, index, col, amount, price):
-	    total = amount * float(price)
-	    lc.SetStringItem(index, col, str(total))
-
-    def __getSubTotal(self, lc):
-	    self.subtotal = self.GetParent.wp_right.p_content.l_vsubtotal
-	    count = int(lc.GetItemCount())
-	    subtotal = 0
-	 
-	    for i in range(0, count):
-		    subtotal += float(self.__getColumnText(lc, i, 3))
-		
-	    self.subtotal.SetLabel(str(subtotal))
-	    return subtotal
-
-    def __get_tax_total(self, lc):
-	    self.taxtotal = self.GetParent.wp_right.p_content.l_vstax
-	    count = int(lc.GetItemCount())
-	    totalTax = 0
-	    
-	    for i in range(0, count):
-		    name = self.__getColumnText(lc, i, 0)
-		    amount = int(self.__getColumnText(lc, i, 1))
-		    price = float(self.__getColumnText(lc, i, 2))
-		    totalTax += self.controller_sale.get_tax_product(name, amount, price)
-
-	    self.taxtotal.SetLabel(str(totalTax))
-	    return totalTax
-
-    def __get_total_sale(self, totalTax, subtotal):
-	    self.saletotal = self.GetParent.wp_right.p_content.l_vtotal
-	    total = totalTax + subtotal
-	    self.saletotal.SetLabel(str(total))
-
-    def __insertProduct(self,currentIndex, name, price):
-	    self.lc_sale = self.GetParent.wp_right.p_content.lc_sale
-	    foundIndex = self.__searchProduct(name)
-	    count = self.lc_sale.GetItemCount()
-	
-	    if count == 0:
-	        index = self.lc_sale.InsertStringItem(0,name)
-	        self.lc_sale.SetStringItem(index, 1, "1")
-	        self.lc_sale.SetStringItem(index, 2, price)
-	        self.lc_sale.SetStringItem(index, 3, price)
-	        amount = 1
-	    elif foundIndex == -1:
-	        index = self.lc_sale.InsertStringItem(0,name)
-	        self.lc_sale.SetStringItem(index, 1, "1")
-	        self.lc_sale.SetStringItem(index, 2, price)
-	        self.lc_sale.SetStringItem(index, 3, price)
-	        amount = 1
-            else:
-	            amount = int(self.__getColumnText(self.lc_sale, foundIndex, 1)) + 1
-	            self.__setColumnText(self.lc_sale, foundIndex, 1, str(amount))
-	            self.__getTotal(self.lc_sale, foundIndex, 3, amount, price)
-	
-	    subtotal = self.__getSubTotal(self.lc_sale)
-	    taxTotal = self.__get_tax_total(self.lc_sale)
-	    self.__get_total_sale(taxTotal, subtotal)
-
-    def __searchProduct(self, name):
-	    foundIndex = self.lc_sale.FindItem(-1, name, True)
-	    return foundIndex
-
-    def OnSetInfoProduct(self, name):
+    def set_info_product(self, name):
         self.controller.get_info_product(name)
         self.p_info.Layout()
         self.l_name.SetLabel(self.controller.info_product.product.name)

@@ -5,13 +5,15 @@
 import wx
 # begin wxGlade: extracode
 # end wxGlade
-
+from helpers.sale import Sale_helper
 
 
 class Sale_view(wx.Panel):
     def __init__(self, parent, id):
         # begin wxGlade: Sale_view.__init__
         self.parent = parent
+        self.helpers_sale = Sale_helper(self.parent, None)
+
         wx.Panel.__init__(self, parent, id)
         self.p_toolbarinf = wx.Panel(self, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
         self.p_total = wx.Panel(self, -1)
@@ -40,7 +42,8 @@ class Sale_view(wx.Panel):
         self.static_line_1_copy_1 = wx.StaticLine(self.p_toolbarinf, -1)
         self.bitmap_button_4 = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/pay.png", wx.BITMAP_TYPE_ANY))
 
-        self.Bind(wx.EVT_BUTTON, self.OnCancel, id = self.bitmap_button_3.GetId())
+        self.Bind(wx.EVT_BUTTON, self.cancel, id = self.bitmap_button_3.GetId())
+        self.Bind(wx.EVT_BUTTON, self.leave, id = self.bitmap_button_2.GetId())
 
         self.__set_properties()
         self.__do_layout()
@@ -97,12 +100,22 @@ class Sale_view(wx.Panel):
         s_sale.Fit(self)
         # end wxGlade
 
-    def OnCancel(self, evt):
+    def cancel(self, evt):
 	    """
 	    Cierra la venta actual, no la cancela que es diferente.
 	    Solamente nunca ejecuta el evento de venta
 	    """
-	    self.parent.OnCancelSale()
+	    self.parent.cancel_sale(None)
+
+    def leave(self, evt):
+	    """
+	    Salir de la venta sin eliminar los productos, la
+	    guarda temporalmente la venta pero no la registra 
+	    hasta que se pague.
+	    """
+	    current_id =  len(self.parent.list_sales_current) + 1
+	    sale_current = self.helpers_sale.get_products_sale(current_id)
+	    self.parent.cancel_sale(sale_current)
 
 # end of class Sale_view
 

@@ -15,6 +15,7 @@ class RightPanel_view(wx.Panel):
     def __init__(self, parent, id):
         # begin wxGlade: RightPanel_view.__init__
         self.statusSale = False
+        self.list_sales_current = []
 
         wx.Panel.__init__(self, parent, id)
         self.p_maintoolbar = wx.Panel(self, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
@@ -26,8 +27,8 @@ class RightPanel_view(wx.Panel):
         self.bm_cancel = wx.BitmapButton(self.p_maintoolbar, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/cancellation.png", wx.BITMAP_TYPE_ANY))
         self.p_content = SalesList_view(self, -1)
 
-        self.Bind(wx.EVT_BUTTON, self.OnNewSale, id = self.bm_addsale.GetId())
-        self.Bind(wx.EVT_BUTTON, self.OnCancelSale, id = self.bm_cancel.GetId())
+        self.Bind(wx.EVT_BUTTON, self.new_sale, id = self.bm_addsale.GetId())
+        self.Bind(wx.EVT_BUTTON, self.cancel_sale, id = self.bm_cancel.GetId())
 
         self.__set_properties()
         self.__do_layout()
@@ -64,7 +65,7 @@ class RightPanel_view(wx.Panel):
         self.SetSizer(self.s_right)
         self.s_right.Fit(self)
 
-    def OnNewSale(self, evt):
+    def new_sale(self, evt):
 	    self.statusSale = True
 	    self.bm_addsale.Disable()
 	    self.p_content.Destroy()
@@ -72,13 +73,38 @@ class RightPanel_view(wx.Panel):
 	    self.s_right.Add(self.p_content, 1, wx.EXPAND, 10)
 	    self.Layout()
 
-    def OnCancelSale(self):
+    def cancel_sale(self, sale_current):
 	    self.bm_addsale.Enable()
 	    self.statusSale = False
 	    self.p_content.Destroy()
 	    self.p_content = SalesList_view(self, -1)
 	    self.s_right.Add(self.p_content, 1, wx.EXPAND, 10)
+	    self.get_sale_list(sale_current)
+	    #print self.p_content.list_sales_current
 	    self.Layout()
+
+    def get_sale_list(self, sale_current):
+	    """
+	    Obtiene la lista de ventas con productos pagadas o pendientes
+	    que es el resultado de la lista actual mas una venta pagada o pendiente
+	    """
+	    if sale_current:
+		    self.p_content.list_sales_current.append(sale_current)
+		    self.set_sale_list(self.p_content.list_sales_current)
+	    else:
+		    self.set_sale_list(self.p_content.list_sales_current)
+		
+    def set_sale_list(self, sales_current):
+	    """
+	    Actualiza la lista de ventas actuales
+	    """
+	    for item in sales_current:
+		    index = self.p_content.lc_saleslist.InsertStringItem(0, '')
+		    self.p_content.lc_saleslist.SetStringItem(index,1, unicode(item['id']))
+		    self.p_content.lc_saleslist.SetStringItem(index,2, unicode(item['sku']))
+		    self.p_content.lc_saleslist.SetStringItem(index,3, unicode(item['sale']))
+		    self.p_content.lc_saleslist.SetStringItem(index,4, unicode(item['amount']))
+		    self.p_content.lc_saleslist.SetStringItem(index,5, unicode(item['total']))
 	    
         # end wxGlade
 
