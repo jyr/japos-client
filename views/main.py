@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: us-ascii -*-
+# -*- coding: utf-8 -*-
 
 import wx
 from views.leftPanel import LeftPanel_view
@@ -7,14 +7,14 @@ from views.rightPanel import RightPanel_view
 
 class Main(wx.Frame):
     def __init__(self, parent, id):
-        wx.Frame.__init__(self, parent, id)
-        self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
-        
-        self.wp_left = LeftPanel_view(self.splitter, -1)
-        self.wp_right = RightPanel_view(self.splitter, -1)
-                
-        self.__set_properties()
-        self.__do_layout()
+	    self.list_sales_current = []
+	    self.details_sale = None
+	    wx.Frame.__init__(self, parent, id)
+	    self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
+	    self.wp_left = LeftPanel_view(self.splitter, -1)
+	    self.wp_right = RightPanel_view(self.splitter, -1, self.list_sales_current, self.details_sale)
+	    self.__set_properties()
+	    self.__do_layout()
 
     def __set_properties(self):
         self.SetTitle("Principal")

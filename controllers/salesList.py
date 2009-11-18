@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import core
 from django.db.models import Sum
 from japos.sales.models import Sale
