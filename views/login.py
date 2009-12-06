@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: us-ascii -*-
-
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import wx
