@@ -90,6 +90,19 @@ class Sale_helper:
 	    taxTotal = self.get_tax_total(self.lc_sale, self.GetParent.wp_right.p_content.l_vstax)
 	    self.get_total_sale(taxTotal, subtotal, self.GetParent.wp_right.p_content.l_vtotal)
 
+    def update_sale_info(self, lc, currentIndex, amount):
+	    price = self.get_column_text(lc, currentIndex,2)
+	    self.set_column_text(lc, currentIndex, 1, str(amount))
+	    self.get_total(lc, currentIndex, 3, amount, price)
+	    subtotal = self.get_subtotal(lc, self.GetParent.p_content.l_vsubtotal)
+	    taxTotal = self.get_tax_total(lc, self.GetParent.p_content.l_vstax)
+
+	    self.get_total_sale(taxTotal, subtotal, self.GetParent.p_content.l_vtotal)
+	    sale_current = self.get_products_sale(currentIndex)
+	    if subtotal == 0:
+		    self.GetParent.list_sales_current[self.GetParent.sale_id-1].clear()
+		    self.GetParent.list_sales_current.remove({})
+
     def search_product(self, name):
 	    foundIndex = self.lc_sale.FindItem(-1, name, True)
 	    return foundIndex
