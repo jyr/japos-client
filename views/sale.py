@@ -20,8 +20,6 @@ class SaleListCtrl(wx.ListCtrl, listmix.TextEditMixin):
     def OpenEditor(self, col, row):
         if col == 1:
             b = listmix.TextEditMixin.OpenEditor(self, col, row)
-            print "BBBBB"
-            print b
 
 class Sale_view(wx.Panel):
     def __init__(self, parent, id):
@@ -85,23 +83,23 @@ class Sale_view(wx.Panel):
 
     def __do_layout(self):
         # begin wxGlade: Sale_view.__do_layout
-        s_sale = wx.BoxSizer(wx.VERTICAL)
+        self.s_sale = wx.BoxSizer(wx.VERTICAL)
         sizer_7 = wx.FlexGridSizer(1, 6, 0, 0)
-        s_total = wx.BoxSizer(wx.HORIZONTAL)
-        s_values = wx.BoxSizer(wx.VERTICAL)
-        s_terms = wx.BoxSizer(wx.VERTICAL)
-        s_sale.Add(self.l_sale, 0, wx.ALL, 10)
-        s_sale.Add(self.lc_sale, 1, wx.EXPAND, 0)
-        s_terms.Add(self.l_subtotal, 0, wx.ALIGN_RIGHT, 0)
-        s_terms.Add(self.l_tax, 0, wx.ALIGN_RIGHT, 0)
-        s_terms.Add(self.l_total, 0, wx.ALIGN_RIGHT, 0)
-        s_total.Add(s_terms, 1, 0, 0)
-        s_values.Add(self.l_vsubtotal, 0, wx.ALIGN_RIGHT, 0)
-        s_values.Add(self.l_vstax, 0, wx.ALIGN_RIGHT, 0)
-        s_values.Add(self.l_vtotal, 0, wx.ALIGN_RIGHT, 0)
-        s_total.Add(s_values, 1, wx.EXPAND, 0)
-        self.p_total.SetSizer(s_total)
-        s_sale.Add(self.p_total, 0, wx.ALL|wx.EXPAND, 10)
+        self.s_total = wx.BoxSizer(wx.HORIZONTAL)
+        self.s_values = wx.BoxSizer(wx.VERTICAL)
+        self.s_terms = wx.BoxSizer(wx.VERTICAL)
+        self.s_sale.Add(self.l_sale, 0, wx.ALL, 10)
+        self.s_sale.Add(self.lc_sale, 1, wx.EXPAND, 0)
+        self.s_terms.Add(self.l_subtotal, 0, wx.ALIGN_RIGHT, 0)
+        self.s_terms.Add(self.l_tax, 0, wx.ALIGN_RIGHT, 0)
+        self.s_terms.Add(self.l_total, 0, wx.ALIGN_RIGHT, 0)
+        self.s_total.Add(self.s_terms, 1, 0, 0)
+        self.s_values.Add(self.l_vsubtotal, 0, wx.ALIGN_RIGHT, 0)
+        self.s_values.Add(self.l_vstax, 0, wx.ALIGN_RIGHT, 0)
+        self.s_values.Add(self.l_vtotal, 0, wx.ALIGN_RIGHT, 0)
+        self.s_total.Add(self.s_values, 1, wx.EXPAND, 0)
+        self.p_total.SetSizer(self.s_total)
+        self.s_sale.Add(self.p_total, 0, wx.ALL|wx.EXPAND, 10)
         sizer_7.Add(self.bitmap_button_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
         sizer_7.Add(self.static_line_1, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10)
         sizer_7.Add(self.text_ctrl_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
@@ -113,9 +111,9 @@ class Sale_view(wx.Panel):
         sizer_7.AddGrowableCol(1)
         sizer_7.AddGrowableCol(2)
         sizer_7.AddGrowableCol(3)
-        s_sale.Add(self.p_toolbarinf, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
-        self.SetSizer(s_sale)
-        s_sale.Fit(self)
+        self.s_sale.Add(self.p_toolbarinf, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 0)
+        self.SetSizer(self.s_sale)
+        self.s_sale.Fit(self)
         # end wxGlade
 
     def cancel(self, evt):
@@ -124,6 +122,7 @@ class Sale_view(wx.Panel):
 	    Solamente nunca ejecuta el evento de venta
 	    """
 	    self.parent.statusSalePending = False
+	    self.parent.statusDue = True
 	    self.parent.cancel_sale(None)
 
     def leave(self, evt):
@@ -135,12 +134,21 @@ class Sale_view(wx.Panel):
 	    current_id =  len(self.parent.list_sales_current) + 1
 	    sale_current = self.helpers_sale.get_products_sale(current_id)
 	    self.parent.statusSalePending = False
+	    self.parent.statusDue = True
 	    self.parent.cancel_sale(sale_current)
 
     def pay(self, evt):
+	    """
+	    Muestra el dialogo de pago, en dado caso que el faltante sea igual
+	    a cero ya no lo muestra, eso significa que el pago fue realizado
+	    """
 	    if self.lc_sale.GetItemCount() > 0:
-		    self.pay = Pay_view(self.parent, -1)
-		    self.pay.ShowModal()
+		    if self.parent.statusDue:
+			    self.pay = Pay_view(self.parent, -1)
+			    self.pay.ShowModal()
+		    elif float(self.parent.l_vdue.GetLabelText()) > 0 :
+			    self.pay = Pay_view(self.parent, -1)
+			    self.pay.ShowModal()
 
     def delete_product(self, evt):
 	    currentItem = evt.m_itemIndex

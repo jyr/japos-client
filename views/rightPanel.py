@@ -18,7 +18,9 @@ class RightPanel_view(wx.Panel):
         # begin wxGlade: RightPanel_view.__init__
         self.statusSale = False
         self.statusSalePending = False
+        self.statusDue = True
         self.sale_id = 0 
+
         self.parent = parent
         self.helpers_sale = Sale_helper(self.parent)
         self.list_sales_current = list_sales_current
