@@ -125,8 +125,7 @@ class Pay_view(wx.Dialog):
 		    self.parent.l_vdue.SetLabel(str(due))
 	    else:
 		    self.parent.l_vdue.SetLabel('0.000')
-	    print "accept"
-	    print self.parent.statusDue
+
 	    self.Close()
 
     def close(self, evt):
