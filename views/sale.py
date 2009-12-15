@@ -8,6 +8,9 @@ import wx.lib.mixins.listctrl  as  listmix
 # end wxGlade
 from helpers.sale import Sale_helper
 from views.pay import Pay_view
+from views.auth import Auth_view
+from views.discount import Discount_view
+
 
 class SaleListCtrl(wx.ListCtrl, listmix.TextEditMixin):
     def __init__(self, parent, ID, pos=wx.DefaultPosition,
@@ -25,6 +28,7 @@ class Sale_view(wx.Panel):
     def __init__(self, parent, id):
         # begin wxGlade: Sale_view.__init__
         self.parent = parent
+
         self.helpers_sale = Sale_helper(self.parent)
 
         wx.Panel.__init__(self, parent, id)
@@ -48,16 +52,20 @@ class Sale_view(wx.Panel):
         self.l_vsubtotal = wx.StaticText(self.p_total, -1, "0.000")
         self.l_vstax = wx.StaticText(self.p_total, -1, "0.000")
         self.l_vtotal = wx.StaticText(self.p_total, -1, "0.000")
-        self.bitmap_button_2 = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/exit.png", wx.BITMAP_TYPE_ANY))
+        self.bm_leave = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/exit.png", wx.BITMAP_TYPE_ANY))
         self.static_line_1 = wx.StaticLine(self.p_toolbarinf, -1)
-        self.text_ctrl_2 = wx.TextCtrl(self.p_toolbarinf, -1, "")
-        self.bitmap_button_3 = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/delete.png", wx.BITMAP_TYPE_ANY))
+        self.tc_search = wx.TextCtrl(self.p_toolbarinf, -1, "")
+        self.bm_delete = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/delete.png", wx.BITMAP_TYPE_ANY))
         self.static_line_1_copy_1 = wx.StaticLine(self.p_toolbarinf, -1)
-        self.bitmap_button_4 = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/pay.png", wx.BITMAP_TYPE_ANY))
+        self.bm_printer = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/printer.png", wx.BITMAP_TYPE_ANY))
+        self.bm_discount = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/discount.png", wx.BITMAP_TYPE_ANY))
+        self.bm_pay = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/pay.png", wx.BITMAP_TYPE_ANY))
 
-        self.Bind(wx.EVT_BUTTON, self.cancel, id = self.bitmap_button_3.GetId())
-        self.Bind(wx.EVT_BUTTON, self.leave, id = self.bitmap_button_2.GetId())
-        self.Bind(wx.EVT_BUTTON, self.pay, id = self.bitmap_button_4.GetId())
+        self.Bind(wx.EVT_BUTTON, self.cancel, id = self.bm_delete.GetId())
+        self.Bind(wx.EVT_BUTTON, self.leave, id = self.bm_leave.GetId())
+        self.Bind(wx.EVT_BUTTON, self.printer, id = self.bm_printer.GetId())
+        self.Bind(wx.EVT_BUTTON, self.discount, id = self.bm_discount.GetId())
+        self.Bind(wx.EVT_BUTTON, self.pay, id = self.bm_pay.GetId())
         #self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.delete_product, self.lc_sale)
         self.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.delete_product, self.lc_sale)       
 
@@ -72,19 +80,21 @@ class Sale_view(wx.Panel):
         self.l_tax.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Lucida Grande"))
         self.l_total.SetFont(wx.Font(25, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
         self.l_vtotal.SetFont(wx.Font(25, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
-        self.bitmap_button_2.SetSize(self.bitmap_button_2.GetBestSize())
+        self.bm_leave.SetSize(self.bm_leave.GetBestSize())
         self.static_line_1.SetMinSize((1, 70))
-        self.text_ctrl_2.SetMinSize((450, 30))
-        self.bitmap_button_3.SetSize(self.bitmap_button_3.GetBestSize())
+        self.tc_search.SetMinSize((350, 30))
+        self.bm_delete.SetSize(self.bm_delete.GetBestSize())
         self.static_line_1_copy_1.SetMinSize((1, 70))
-        self.bitmap_button_4.SetSize(self.bitmap_button_4.GetBestSize())
+        self.bm_printer.SetSize(self.bm_pay.GetBestSize())
+        self.bm_discount.SetSize(self.bm_pay.GetBestSize())
+        self.bm_pay.SetSize(self.bm_pay.GetBestSize())
         self.p_toolbarinf.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWFRAME))
         # end wxGlade
 
     def __do_layout(self):
         # begin wxGlade: Sale_view.__do_layout
         self.s_sale = wx.BoxSizer(wx.VERTICAL)
-        sizer_7 = wx.FlexGridSizer(1, 6, 0, 0)
+        sizer_7 = wx.FlexGridSizer(1, 8, 0, 0)
         self.s_total = wx.BoxSizer(wx.HORIZONTAL)
         self.s_values = wx.BoxSizer(wx.VERTICAL)
         self.s_terms = wx.BoxSizer(wx.VERTICAL)
@@ -100,12 +110,14 @@ class Sale_view(wx.Panel):
         self.s_total.Add(self.s_values, 1, wx.EXPAND, 0)
         self.p_total.SetSizer(self.s_total)
         self.s_sale.Add(self.p_total, 0, wx.ALL|wx.EXPAND, 10)
-        sizer_7.Add(self.bitmap_button_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
+        sizer_7.Add(self.bm_leave, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
         sizer_7.Add(self.static_line_1, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10)
-        sizer_7.Add(self.text_ctrl_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
-        sizer_7.Add(self.bitmap_button_3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
+        sizer_7.Add(self.tc_search, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
+        sizer_7.Add(self.bm_delete, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
         sizer_7.Add(self.static_line_1_copy_1, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10)
-        sizer_7.Add(self.bitmap_button_4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
+        sizer_7.Add(self.bm_printer, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
+        sizer_7.Add(self.bm_discount, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
+        sizer_7.Add(self.bm_pay, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 10)
         self.p_toolbarinf.SetSizer(sizer_7)
         sizer_7.AddGrowableRow(0)
         sizer_7.AddGrowableCol(1)
@@ -123,6 +135,7 @@ class Sale_view(wx.Panel):
 	    """
 	    self.parent.statusSalePending = False
 	    self.parent.statusDue = True
+	    self.parent.statusDiscount = True
 	    self.parent.cancel_sale(None)
 
     def leave(self, evt):
@@ -135,6 +148,7 @@ class Sale_view(wx.Panel):
 	    sale_current = self.helpers_sale.get_products_sale(current_id)
 	    self.parent.statusSalePending = False
 	    self.parent.statusDue = True
+	    self.parent.statusDiscount = True
 	    self.parent.cancel_sale(sale_current)
 
     def pay(self, evt):
@@ -149,6 +163,38 @@ class Sale_view(wx.Panel):
 		    elif float(self.parent.l_vdue.GetLabelText()) > 0 :
 			    self.pay = Pay_view(self.parent, -1)
 			    self.pay.ShowModal()
+
+    def discount(self, evt):
+	    """
+	    Genera el descuento y lo aplica, pero debe ser autorizado
+	    por un auditor
+	    """
+	    if self.lc_sale.GetItemCount() > 0 and self.parent.statusDiscount:
+		    self.auth = Auth_view(self.parent, -1)
+		    self.auth.ShowModal()
+		    print "validacaantes"
+		    print self.parent.valid
+		    if self.parent.valid:
+			    print "validaca"
+			    print self.parent.valid
+			    discount = Discount_view(None, -1)
+			    discount.ShowModal()
+			    self.l_discount = wx.StaticText(self.p_total, -1, "Descuento")
+			    self.l_vdiscount = wx.StaticText(self.p_total, -1, "0.000")
+			    self.s_terms.Insert(2, self.l_discount, 0, wx.ALIGN_RIGHT, 0)
+			    self.s_values.Insert(2, self.l_vdiscount, 0, wx.ALIGN_RIGHT, 0)
+			    self.parent.p_content.Layout()
+			    self.parent.statusDiscount = False
+		    else:
+			    print "validfalse"
+			    print self.parent.valid
+
+
+    def printer(self, evt ):
+	    """
+	    Impresion del ticket de venta
+	    """
+	    pass
 
     def delete_product(self, evt):
 	    currentItem = evt.m_itemIndex

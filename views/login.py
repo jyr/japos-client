@@ -5,7 +5,7 @@ import wx
 
 from openings import Opening_view
 
-from controllers.login import Login
+from controllers.auth import Auth_controller
 # begin wxGlade: extracode
 # end wxGlade
 
@@ -16,7 +16,7 @@ class Login_view(wx.Frame):
         # begin wxGlade: Login.__init__
         wx.Frame.__init__(self,  parent, id, style=wx.DEFAULT_FRAME_STYLE ^(wx.MAXIMIZE_BOX))
 
-        self.controller = Login()
+        self.controller = Auth_controller()
         
         self.p_data = wx.Panel(self, -1)
         self.s_username_staticbox = wx.StaticBox(self.p_data, -1, "")

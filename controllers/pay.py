@@ -23,6 +23,5 @@ class Pay_controller:
 		    self.choices_salesman.append(str(item[1]))
 	
 	    data = Money.objects.filter(is_enabled = 1).values_list('initials')
-	    i = 0
 	    for item in data:
 		    self.choices_coins.append(str(item[0]))
