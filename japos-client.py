@@ -5,7 +5,9 @@
 #
 
 import sys
-sys.path.append("/Users/jyr/Desarrollo/git-projects/japos-client/")
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__))+"/")
 
 from views import login
 login.main()
