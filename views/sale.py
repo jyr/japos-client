@@ -177,10 +177,10 @@ class Sale_view(wx.Panel):
 		    if self.parent.valid:
 			    print "validaca"
 			    print self.parent.valid
-			    discount = Discount_view(None, -1)
-			    discount.ShowModal()
-			    self.l_discount = wx.StaticText(self.p_total, -1, "Descuento")
-			    self.l_vdiscount = wx.StaticText(self.p_total, -1, "0.000")
+			    self.discount = Discount_view(None, -1)
+			    self.discount.ShowModal()
+			    self.apply_percentage()
+			    self.l_vdiscount = wx.StaticText(self.p_total, -1, self.discount.cb_percentage.GetValue() + "%")
 			    self.s_terms.Insert(2, self.l_discount, 0, wx.ALIGN_RIGHT, 0)
 			    self.s_values.Insert(2, self.l_vdiscount, 0, wx.ALIGN_RIGHT, 0)
 			    self.parent.p_content.Layout()
@@ -189,6 +189,13 @@ class Sale_view(wx.Panel):
 			    print "validfalse"
 			    print self.parent.valid
 
+    def apply_percentage(self):
+	    p = float(self.discount.cb_percentage.GetValue())
+	    t = float(self.l_vtotal.GetLabel())
+	    self.l_discount = wx.StaticText(self.p_total, -1, "Descuento")
+	    v = (t * p) / 100
+	    total = float(t) - v
+	    self.l_vtotal.SetLabel(str(total))
 
     def printer(self, evt ):
 	    """

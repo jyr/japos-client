@@ -20,12 +20,14 @@ class Discount_view(wx.Dialog):
         self.l_type = wx.StaticText(self, -1, "Tipo", style=wx.ALIGN_CENTRE)
         self.cb_type = wx.ComboBox(self, -1, choices=["Descuento de empleado", "Cortesia", "Promocion", "Descuento"], style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.l_percentage = wx.StaticText(self, -1, "Porcentaje", style=wx.ALIGN_CENTRE)
-        self.cb_percentage = wx.ComboBox(self, -1, choices = self.controller_discount.choices, style=wx.CB_DROPDOWN|wx.CB_READONLY)
+        self.cb_percentage = wx.ComboBox(self, -1, choices = [" "], style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.b_ok = wx.Button(self, wx.ID_OK, "")
         self.b_cancel = wx.Button(self, wx.ID_CANCEL, "")
 
         self.Center()
-
+		
+        wx.EVT_COMBOBOX(self, self.cb_type.GetId(), self.percentage)
+		
         self.__set_properties()
         self.__do_layout()
         # end wxGlade
@@ -56,6 +58,25 @@ class Discount_view(wx.Dialog):
         s_discount.Fit(self)
         self.Layout()
         # end wxGlade
+
+    def percentage(self, evt):
+	    self.cb_percentage.Clear()
+	
+	    if self.cb_type.GetValue() == "Descuento de empleado":
+		    self.controller_discount.get_discount("E")
+		    self.cb_percentage.AppendItems(self.controller_discount.choices)
+
+	    if self.cb_type.GetValue() == "Cortesia":
+		    self.controller_discount.get_discount("C")
+		    self.cb_percentage.AppendItems(self.controller_discount.choices)
+
+	    if self.cb_type.GetValue() == "Promocion":
+		    self.controller_discount.get_discount("P")
+		    self.cb_percentage.AppendItems(self.controller_discount.choices)
+
+	    if self.cb_type.GetValue() == "Descuento":
+		    self.controller_discount.get_discount("D")
+		    self.cb_percentage.AppendItems(self.controller_discount.choices)
 
 # end of class Discount_view
 
