@@ -78,6 +78,9 @@ class RightPanel_view(wx.Panel):
 
     def new_sale(self, evt):
 	    self.statusSale = True
+	    self.statusDue = True
+	    self.statusDiscount = True
+	
 	    self.bm_addsale.Disable()
 	    self.p_content.Destroy()
 	    self.p_content = Sale_view(self, -1)
@@ -121,10 +124,26 @@ class RightPanel_view(wx.Panel):
 	    self.get_sale_list(sale_current)
 	    self.Layout()
 
+    def pay_close(self):
+	    """
+	    Se usa para cerrar el dialogo una vez que el pago se completo
+	    """
+	    self.bm_addsale.Enable()
+	    #self.statusSale = False
+	    #self.statusDue = True
+	    #self.statusDiscount = True
+	    self.p_content.Destroy()
+	    self.p_content = SalesList_view(self, -1)
+	    self.s_right.Add(self.p_content, 1, wx.EXPAND, 10)
+	    self.get_sale_list(None)
+	    self.Layout()
+		
+
     def get_sale_list(self, sale_current):
 	    """
 	    Obtiene la lista de ventas con productos pagadas o pendientes
-	    que es el resultado de la lista actual mas una venta pagada o pendiente
+	    que es el resultado de la lista actual mas una venta pagada o pendiente.
+	    Si sale_current es None regresara las ventas pagadas solamente.
 	    """
 	    if sale_current:
 		    self.p_content.list_sales_current.append(sale_current)

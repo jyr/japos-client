@@ -112,6 +112,12 @@ class Pay_view(wx.Dialog):
         # end wxGlade
 
     def accept(self, evt):
+	    """
+	    Acepta pagos por partes o completos, una vez pagado aplicado el descuento
+	    se puede seguir haciendo pagos por partes.
+	    """
+	    print "Accept DUe", self.parent.statusDue
+
 	    if self.parent.statusDue:
 		    self.parent.l_due = wx.StaticText(self.parent.p_content.p_total, -1, "Faltante")
 		    self.parent.l_vdue = wx.StaticText(self.parent.p_content.p_total, -1, "0.000")
@@ -125,6 +131,9 @@ class Pay_view(wx.Dialog):
 		    self.parent.l_vdue.SetLabel(str(due))
 	    else:
 		    self.parent.l_vdue.SetLabel('0.000')
+		    print "agregar venta pagada"
+		    print self.parent.list_sales_current
+		    self.parent.pay_close()
 
 	    self.Close()
 
