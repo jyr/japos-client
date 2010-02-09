@@ -172,16 +172,14 @@ class Sale_view(wx.Panel):
 	    if self.lc_sale.GetItemCount() > 0 and self.parent.statusDiscount:
 		    self.auth = Auth_view(self.parent, -1)
 		    self.auth.ShowModal()
-		    print "validacaantes"
-		    print self.parent.valid
-		    if self.parent.valid:
-			    print "validaca"
-			    print self.parent.valid
-			    self.apply_discount()
-		    else:
-			    print "validfalse"
-			    print self.parent.valid
 
+		    if self.parent.valid:
+			    self.apply_discount()
+		    #else:
+			#    print "validfalse"
+			#    print self.parent.valid
+
+		
     def apply_discount(self):
 	    self.discount = Discount_view(None, -1)
 	    self.discount.ShowModal()

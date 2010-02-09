@@ -14,6 +14,7 @@ class Auth_controller:
 	def auth(self, username, password):
 	    self.username = Employee.objects.get(user__username = username)
 	    self.valid = check_password(password, self.username.user.password)
+
 	    return self.valid
 
 	def error(self):

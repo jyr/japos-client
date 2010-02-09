@@ -16,8 +16,7 @@ class Auth_view(wx.Dialog):
         # begin wxGlade: Auth_view.__init__
         wx.Dialog.__init__(self, parent, id)
         self.parent = parent
-        #print dir(self.parent)
-        #self.valid = self.parent.valid
+
         self.controller_auth = Auth_controller()
         self.l_auth = wx.StaticText(self, -1, "Autorizar", style=wx.ALIGN_CENTRE)
         self.l_auditor = wx.StaticText(self, -1, "Auditor")
@@ -26,7 +25,8 @@ class Auth_view(wx.Dialog):
         self.tc_password = wx.TextCtrl(self, -1, "", style=wx.TE_PASSWORD)
         self.b_ok = wx.Button(self, wx.ID_OK, "")
         self.b_cancel = wx.Button(self, wx.ID_CANCEL, "")
-        self.Center()
+        self.Center() 
+
         self.Bind(wx.EVT_BUTTON, self.OnAuth, id = self.b_ok.GetId())
         self.Bind(wx.EVT_BUTTON, self.OnCancel, id = self.b_cancel.GetId())
 
@@ -74,17 +74,15 @@ class Auth_view(wx.Dialog):
 		    self.controller_auth.error()
 
     def OnCancel(self, evt):
-	    self.Destroy()
+	    self.parent.valid = False
+	    self.Destroy()	    
 
     def validate(self):
 	    self.parent.valid = self.controller_auth.auth(self.username, self.password)
-	    print "valid"
-	    print self.parent.valid
 	    if self.parent.valid:
-		    self.Close()
+		    self.Destroy()
 	    else:
-		    self.controller_auth.error()
-	    
+		    self.controller_auth.error()		
 
 # end of class Auth_view
 

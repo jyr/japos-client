@@ -9,12 +9,11 @@ class Main(wx.Frame):
     def __init__(self, parent, id):
 	    self.list_sales_current = []
 	    self.details_sale = None
-	    self.valid = False
 
 	    wx.Frame.__init__(self, parent, id)
 	    self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
 	    self.wp_left = LeftPanel_view(self.splitter, -1)
-	    self.wp_right = RightPanel_view(self.splitter, -1, self.list_sales_current, self.details_sale, self.valid)
+	    self.wp_right = RightPanel_view(self.splitter, -1, self.list_sales_current, self.details_sale)
 	    self.__set_properties()
 	    self.__do_layout()
 

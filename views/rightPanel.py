@@ -14,20 +14,19 @@ from helpers.sale import Sale_helper
 
 
 class RightPanel_view(wx.Panel):
-    def __init__(self, parent, id, list_sales_current, details_sale, valid):
+    def __init__(self, parent, id, list_sales_current, details_sale):
         # begin wxGlade: RightPanel_view.__init__
         self.statusSale = False
         self.statusSalePending = False
         self.statusDue = True
         self.statusDiscount = True
-
         self.sale_id = 0 
-
+        self.valid = False
         self.parent = parent
+
         self.helpers_sale = Sale_helper(self.parent)
         self.list_sales_current = list_sales_current
         self.details_sale = details_sale
-        self.valid = valid
 
         wx.Panel.__init__(self, parent, id)
         self.p_maintoolbar = wx.Panel(self, -1, style=wx.SIMPLE_BORDER|wx.TAB_TRAVERSAL)
