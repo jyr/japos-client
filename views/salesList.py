@@ -18,8 +18,8 @@ class SalesList_view(wx.Panel):
         self.list_sales_current = self.parent.list_sales_current
         self.helpers_sale = Sale_helper(self.parent)
         wx.Panel.__init__(self, parent, id)
-        
-        self.controller = SalesList()
+
+        self.controller = SalesList(self.parent.pos)
         self.controller.get_sales()
         self.controller.get_total_products()
         self.controller.get_total_all()

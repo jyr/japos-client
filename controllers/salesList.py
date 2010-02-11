@@ -2,12 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import core
-from django.db.models import Sum
+from django.db.models import Sum, Max
+from japos.pos.models import Pos
+from japos.openings.models import Opening
 from japos.sales.models import Sale
 
 class SalesList:
-    def __init__(self):
-        self.data = Sale.objects.filter(opening__pos = 2)
+    def __init__(self, pos):
+        self.pos = pos
+        self.get_id_pos()
+        self.get_opening()
+        self.data = Sale.objects.filter(opening__pos = self.pos_id)
         self.get_price_product_all()
         self.get_amount_product_all()
         self.get_subtotal_all()
@@ -15,13 +20,21 @@ class SalesList:
         self.get_tax_value_all()
         self.get_price_discount_all()
         self.get_sale_price()
-        
+
+    def get_id_pos(self):
+	    pos_id  =  Pos.objects.get(name = self.pos)
+	    self.pos_id = pos_id.pk
+
+    def get_opening(self):
+	    q = Opening.objects.all().aggregate(Max('pk')).values()
+	    self.opening = q[0]
+	
     def get_sales(self):
         """
             Listado de todas las ventas
         """
         self.sales = []
-        self.sales = Sale.objects.filter(opening__pos = 2).values_list('pk', 'sku', 'date_created')
+        self.sales = Sale.objects.filter(opening__pos = self.pos_id).filter(opening__pk = self.opening).values_list('pk', 'sku', 'date_created')
         
         return self.sales
 

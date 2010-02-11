@@ -5,7 +5,7 @@
 import wx
 
 from controllers.pay import Pay_controller
-
+from controllers.sale import Sale
 # begin wxGlade: extracode
 # end wxGlade
 
@@ -17,6 +17,7 @@ class Pay_view(wx.Dialog):
 
         self.parent = parent
         self.controller_pay = Pay_controller()
+        self.controller_sale = Sale()
 		    
         self.get_total()
 
@@ -131,12 +132,21 @@ class Pay_view(wx.Dialog):
 		    self.parent.l_vdue.SetLabel(str(due))
 	    else:
 		    self.parent.l_vdue.SetLabel('0.000')
-		    print "agregar venta pagada"
-		    print self.parent.list_sales_current
+		    self.shopping_cart()
 		    self.parent.pay_close()
 
 	    self.Close()
 
+    def shopping_cart(self):
+	    """
+	    Agrega los productos al carro de compra
+	    """
+	    count = self.parent.p_content.lc_sale.GetItemCount()
+	    for i in range(0, count):
+		    name = str(self.parent.p_content.lc_sale.GetItemText(i))
+		    amount = int(self.parent.helpers_sale.get_column_text(self.parent.p_content.lc_sale, i,1))
+		    self.controller_sale.add_shopping_cart(name, amount, self.parent.pos)
+		
     def close(self, evt):
 	    self.Close()
 

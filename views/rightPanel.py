@@ -23,6 +23,8 @@ class RightPanel_view(wx.Panel):
         self.sale_id = 0 
         self.valid = False
         self.parent = parent
+        self.pos = self.parent.GetParent().pos	#Obtiene el padre en este caso es la ventana de opening para sacar el pos
+
 
         self.helpers_sale = Sale_helper(self.parent)
         self.list_sales_current = list_sales_current
@@ -127,6 +129,8 @@ class RightPanel_view(wx.Panel):
     def pay_close(self):
 	    """
 	    Se usa para cerrar el dialogo una vez que el pago se completo
+	    y agrega la venta pagada a list_sales_current obteniendola desde
+	    la bd, por eso a get_sale_list se le debe pasar None
 	    """
 	    self.bm_addsale.Enable()
 	    #self.statusSale = False

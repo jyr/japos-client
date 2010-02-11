@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
+
 from controllers.sale import Sale
 
 class Sale_helper:

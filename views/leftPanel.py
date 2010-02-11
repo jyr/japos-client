@@ -16,10 +16,10 @@ from helpers.sale import Sale_helper
 
 class LeftPanel_view(wx.Panel):
     def __init__(self, parent, id):
-        self.parent = parent
-        self.GetParent = self.parent.GetParent()
+        self.parent = parent	#obtiene el splitter del lado izquierdo
+        self.GetParent = self.parent.GetParent()	#Obtiene el padre en este caso es la ventana de opening
         self.controller = Stock()
-        self.controller.get_stock()
+        self.controller.get_stock(self.GetParent.pos)
         self.controller_sale = Sale()
         self.helpers_sale = Sale_helper(self.GetParent)
         
@@ -138,7 +138,7 @@ class LeftPanel_view(wx.Panel):
     def search(self, evt):
         self.lc_products.DeleteAllItems()
         name = self.tc_search.GetValue()
-        self.controller.get_stock(name)
+        self.controller.get_stock(self.GetParent.pos, name)
         self.list_products()
 
     def list_products(self):

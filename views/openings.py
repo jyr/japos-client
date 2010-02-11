@@ -98,7 +98,7 @@ class Opening_view(wx.Panel):
 			initialfund = self.tc_initialfund.GetValue()
 			
 			self.controller.create_opening(pos, cashier, auditor, initialfund)
-			self.main = Main(None, -1)
+			self.main = Main(None, -1, pos)
 			self.main.Show()
 			self.parent.Close()
 		except wx._core.PyAssertionError:

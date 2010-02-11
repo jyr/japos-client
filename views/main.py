@@ -6,9 +6,10 @@ from views.leftPanel import LeftPanel_view
 from views.rightPanel import RightPanel_view
 
 class Main(wx.Frame):
-    def __init__(self, parent, id):
+    def __init__(self, parent, id, pos):
 	    self.list_sales_current = []
 	    self.details_sale = None
+	    self.pos = pos # pos = point of sale
 
 	    wx.Frame.__init__(self, parent, id)
 	    self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)

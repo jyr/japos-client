@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import core
+
 from japos.stockrooms.models import StockRoom
+from japos.sales.models import ShoppingCart
 
 class Sale:
     def __init__(self):
@@ -17,3 +19,9 @@ class Sale:
 	    taxPercentage = float(data[0][0])
 	    tax = ((taxPercentage / (100 - taxPercentage)) * price) * amount
 	    return tax
+
+    def add_shopping_cart(self, name, amount, pos):
+	    stock = StockRoom.objects.filter(pos__name = pos).get(product__name = name)
+	    cart = ShoppingCart(stock_room_id = stock.id)
+	    cart.amount = amount
+	    cart.save()
