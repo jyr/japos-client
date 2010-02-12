@@ -139,8 +139,11 @@ class Pay_view(wx.Dialog):
 
     def shopping_cart(self):
 	    """
-	    Agrega los productos al carro de compra
+	    Crea la venta y agrega los productos al carro de compra
 	    """
+
+	    self.controller_sale.create_sale()
+
 	    count = self.parent.p_content.lc_sale.GetItemCount()
 	    for i in range(0, count):
 		    name = str(self.parent.p_content.lc_sale.GetItemText(i))

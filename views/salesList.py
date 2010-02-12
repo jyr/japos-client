@@ -66,17 +66,22 @@ class SalesList_view(wx.Panel):
 	    Obtiene la lista de ventas por pos al iniciar el turno
 	    y crea la lista que guardara la lista de ventas actuales
 	    """
-	    if not self.list_sales_current:
-		    for i in range(0, len(self.controller.sales)):
-			    self.list_sales_current.append({'id': i+1,'sku': unicode(self.controller.sales[i][1]), 'sale': unicode(self.controller.sales[i][2]), 'amount': unicode(self.controller.total_products[i]['amount__sum']), 'total':unicode(self.controller.total[i]), 'products': []})
+	    print self.controller.sales
+	    #if not self.list_sales_current:
+	    for i in range(0, len(self.controller.sales)):
+		    self.list_sales_current.append({'id': i+1,'sku': unicode(self.controller.sales[i][1]), 'sale': unicode(self.controller.sales[i][2]), 'amount': unicode(self.controller.total_products[i]['amount__sum']), 'total':unicode(self.controller.total[i]), 'products': []})
 
-		    for item in self.list_sales_current:
-			    index = self.lc_saleslist.InsertStringItem(0, '')
-			    self.lc_saleslist.SetStringItem(index,1, unicode(item['id']))
-			    self.lc_saleslist.SetStringItem(index,2, unicode(item['sku']))
-			    self.lc_saleslist.SetStringItem(index,3, unicode(item['sale']))
-			    self.lc_saleslist.SetStringItem(index,4, unicode(item['amount']))
-			    self.lc_saleslist.SetStringItem(index,5, unicode(item['total']))
+	    print self.list_sales_current
+	    print len(self.list_sales_current)
+	    self.lc_saleslist.DeleteAllItems()
+
+	    for item in self.list_sales_current:
+		    index = self.lc_saleslist.InsertStringItem(0, '')
+		    self.lc_saleslist.SetStringItem(index,1, unicode(item['id']))
+		    self.lc_saleslist.SetStringItem(index,2, unicode(item['sku']))
+		    self.lc_saleslist.SetStringItem(index,3, unicode(item['sale']))
+		    self.lc_saleslist.SetStringItem(index,4, unicode(item['amount']))
+		    self.lc_saleslist.SetStringItem(index,5, unicode(item['total']))
 
     def details_sale(self, evt):
 	    currentItem = evt.m_itemIndex

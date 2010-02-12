@@ -149,6 +149,7 @@ class Sale_helper:
 	    return sale_current
 
     def get_details_sale(self, list_sales_current, current_id):
+	    print list_sales_current
 	    for item in list_sales_current:
 		    if item['id'] == current_id:
 			    self.GetParent.details_sale = item['products']

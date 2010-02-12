@@ -159,6 +159,7 @@ class RightPanel_view(wx.Panel):
 	    """
 	    Actualiza la lista de ventas actuales
 	    """
+	    self.p_content.lc_saleslist.DeleteAllItems()
 	    for item in sales_current:
 		    index = self.p_content.lc_saleslist.InsertStringItem(0, '')
 		    self.p_content.lc_saleslist.SetStringItem(index,1, unicode(item['id']))
