@@ -66,13 +66,36 @@ class SalesList_view(wx.Panel):
 	    Obtiene la lista de ventas por pos al iniciar el turno
 	    y crea la lista que guardara la lista de ventas actuales
 	    """
-	    print self.controller.sales
-	    #if not self.list_sales_current:
-	    for i in range(0, len(self.controller.sales)):
-		    self.list_sales_current.append({'id': i+1,'sku': unicode(self.controller.sales[i][1]), 'sale': unicode(self.controller.sales[i][2]), 'amount': unicode(self.controller.total_products[i]['amount__sum']), 'total':unicode(self.controller.total[i]), 'products': []})
-
-	    print self.list_sales_current
-	    print len(self.list_sales_current)
+	    list_sale_current_temp = []
+	    if not self.list_sales_current:
+		    for i in range(0, len(self.controller.sales)):
+			    sku = unicode(self.controller.sales[i][1])
+			    sale = unicode(self.controller.sales[i][2])
+			    amount = unicode(self.controller.total_products[i]['amount__sum'])
+			    total = unicode(self.controller.total[i])
+			    ids = i+1
+			    if  not self.list_sales_current:
+				    self.list_sales_current.append({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': []})
+	    else:
+		    for i in range(0, len(self.controller.sales)):
+			    sku = unicode(self.controller.sales[i][1])
+			    sale = unicode(self.controller.sales[i][2])
+			    amount = unicode(self.controller.total_products[i]['amount__sum'])
+			    total = unicode(self.controller.total[i])
+			    ids = i+1
+			    for item in self.list_sales_current:
+				    if item['id'] != ids: #and not item['total'] == total and not item['amount'] == int(amount):
+					    try:
+						    self.list_sales_current.index({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': item['products']})
+					    except:
+						    try:
+							    list_sale_current_temp.index({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': item['products']})
+						    except:
+							    list_sale_current_temp.append({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': item['products']})
+		    
+		    for item in list_sale_current_temp:
+			    self.list_sales_current.append(item)
+		    
 	    self.lc_saleslist.DeleteAllItems()
 
 	    for item in self.list_sales_current:

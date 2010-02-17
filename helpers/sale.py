@@ -133,6 +133,7 @@ class Sale_helper:
 		        los datos actualizado de la venta pendiente seleccionada
 		        """
 		        tmp = []
+		        print "GET_PRODUCTS_SALE ",self.GetParent.list_sales_current
 		        for item in self.GetParent.list_sales_current:
 				    if item['id'] == self.GetParent.sale_id:
 					    item['total'] = self.saletotal.GetLabel()
@@ -149,7 +150,7 @@ class Sale_helper:
 	    return sale_current
 
     def get_details_sale(self, list_sales_current, current_id):
-	    print list_sales_current
+	    print "get_details_sale ",list_sales_current
 	    for item in list_sales_current:
 		    if item['id'] == current_id:
 			    self.GetParent.details_sale = item['products']

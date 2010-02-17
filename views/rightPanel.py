@@ -154,6 +154,7 @@ class RightPanel_view(wx.Panel):
 		    self.set_sale_list(self.p_content.list_sales_current)
 	    else:
 		    self.set_sale_list(self.p_content.list_sales_current)
+	    print "GET_SALE_LIST", self.p_content.list_sales_current
 		
     def set_sale_list(self, sales_current):
 	    """

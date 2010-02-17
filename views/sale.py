@@ -137,6 +137,7 @@ class Sale_view(wx.Panel):
 	    """
 	    current_id =  len(self.parent.list_sales_current) + 1
 	    sale_current = self.helpers_sale.get_products_sale(current_id)
+	    print "SALE CURRENT", sale_current
 	    self.parent.statusSalePending = False
 	    self.parent.statusDue = True
 	    self.parent.statusDiscount = True
