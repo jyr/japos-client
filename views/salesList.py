@@ -68,6 +68,9 @@ class SalesList_view(wx.Panel):
 	    """
 	    list_sale_current_temp = []
 	    if not self.list_sales_current:
+		    """
+		    Cuando la venta se realiza al momento, sin tener ventas pendientes ni vendidas
+		    """
 		    for i in range(0, len(self.controller.sales)):
 			    sku = unicode(self.controller.sales[i][1])
 			    sale = unicode(self.controller.sales[i][2])
@@ -77,14 +80,19 @@ class SalesList_view(wx.Panel):
 			    if  not self.list_sales_current:
 				    self.list_sales_current.append({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': []})
 	    else:
+		    print "self.controller.sales", self.controller.sales
 		    for i in range(0, len(self.controller.sales)):
 			    sku = unicode(self.controller.sales[i][1])
 			    sale = unicode(self.controller.sales[i][2])
 			    amount = unicode(self.controller.total_products[i]['amount__sum'])
 			    total = unicode(self.controller.total[i])
 			    ids = i+1
+			    print "self.list_sales_current", self.list_sales_current
 			    for item in self.list_sales_current:
-				    if item['id'] != ids: #and not item['total'] == total and not item['amount'] == int(amount):
+				    if item['id'] != ids and item['sku'] != '--': #and not item['total'] == total and not item['amount'] == int(amount):
+					    """
+					    Cuando la venta se realiza al momento, sin tener ventas pendientes listadas solo vendidas
+					    """
 					    try:
 						    self.list_sales_current.index({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': item['products']})
 					    except:
@@ -92,6 +100,11 @@ class SalesList_view(wx.Panel):
 							    list_sale_current_temp.index({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': item['products']})
 						    except:
 							    list_sale_current_temp.append({'id': ids,'sku': sku, 'sale': sale, 'amount': amount, 'total': total, 'products': item['products']})
+				    elif item['sku'] == '--' and item['total'] == total and item['amount'] == int(amount):
+					    """
+					    Cuando la venta pendiente se termina de hacer con listado de ventas realizadas
+					    """
+					    self.list_sales_current.remove(item)
 		    
 		    for item in list_sale_current_temp:
 			    self.list_sales_current.append(item)
