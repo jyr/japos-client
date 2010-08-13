@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
+from platform import Platform
 
 from main import Main
 
@@ -16,13 +17,14 @@ class Opening_view(wx.Panel):
     def __init__(self,  parent, id):
         # begin wxGlade: Opening.__init__
         wx.Panel.__init__(self,  parent, id)
+        img = Platform("/img/logo.png")
 
         self.controller = Opening_controller()
         self.parent = parent
         
         self.p_inputs = wx.Panel(self, -1)
         self.p_header = wx.Panel(self, -1)
-        self.img_logo = wx.StaticBitmap(self.p_header, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/logo.png", wx.BITMAP_TYPE_ANY))
+        self.img_logo = wx.StaticBitmap(self.p_header, -1, wx.Bitmap(img.string, wx.BITMAP_TYPE_ANY))
         self.l_opening = wx.StaticText(self.p_header, -1, "Abrir turno", style=wx.ALIGN_CENTRE)
         self.static_line_1 = wx.StaticLine(self.p_header, -1, style=wx.LI_VERTICAL)
 

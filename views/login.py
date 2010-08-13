@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
-
+from platform import Platform
 from openings import Opening_view
 
 from controllers.auth import Auth_controller
@@ -14,6 +14,7 @@ from controllers.auth import Auth_controller
 class Login_view(wx.Frame):
     def __init__(self, parent, id):
         # begin wxGlade: Login.__init__
+        img = Platform("/img/logo.png")
         wx.Frame.__init__(self,  parent, id, style=wx.DEFAULT_FRAME_STYLE ^(wx.MAXIMIZE_BOX))
 
         self.controller = Auth_controller()
@@ -24,7 +25,7 @@ class Login_view(wx.Frame):
         self.s_connect_staticbox = wx.StaticBox(self.p_data, -1, "")
         self.s_data_staticbox = wx.StaticBox(self.p_data, -1, "")
         self.p_header = wx.Panel(self, -1)
-        self.img_logo = wx.StaticBitmap(self.p_header, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/logo.png", wx.BITMAP_TYPE_ANY))
+        self.img_logo = wx.StaticBitmap(self.p_header, -1, wx.Bitmap(img.string, wx.BITMAP_TYPE_ANY))
         self.l_japos = wx.StaticText(self.p_header, -1, "JAPOS", style=wx.ALIGN_CENTRE)
         self.static_line_1 = wx.StaticLine(self.p_header, -1, style=wx.LI_VERTICAL)
         self.l_username = wx.StaticText(self.p_data, -1, "Username: ")
@@ -83,6 +84,7 @@ class Login_view(wx.Frame):
     def OnAuth(self, evt):
 		username = self.cb_username.GetValue().encode('utf-8')
 		password = self.tc_password.GetValue().encode('utf-8')
+		print password
 		try:
 			self.valid = self.controller.auth(username, password)
 			if self.valid:

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
+from platform import Platform
 import wx.lib.mixins.listctrl  as  listmix
 from helpers.sale import Sale_helper
 from views.pay import Pay_view
@@ -24,6 +25,11 @@ class SaleListCtrl(wx.ListCtrl, listmix.TextEditMixin):
 class Sale_view(wx.Panel):
     def __init__(self, parent, id):
         self.parent = parent
+        img_leave = Platform("/img/toolbars/exit.png")
+        img_delete = Platform("/img/toolbars/delete.png")
+        img_printer = Platform("/img/toolbars/printer.png")
+        img_discount = Platform("/img/toolbars/discount.png")
+        img_pay = Platform("/img/toolbars/pay.png")
 
         self.helpers_sale = Sale_helper(self.parent)
 
@@ -48,14 +54,14 @@ class Sale_view(wx.Panel):
         self.l_vsubtotal = wx.StaticText(self.p_total, -1, "0.000")
         self.l_vstax = wx.StaticText(self.p_total, -1, "0.000")
         self.l_vtotal = wx.StaticText(self.p_total, -1, "0.000")
-        self.bm_leave = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/exit.png", wx.BITMAP_TYPE_ANY))
+        self.bm_leave = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap(img_leave.string, wx.BITMAP_TYPE_ANY))
         self.static_line_1 = wx.StaticLine(self.p_toolbarinf, -1)
         self.tc_search = wx.TextCtrl(self.p_toolbarinf, -1, "")
-        self.bm_delete = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/delete.png", wx.BITMAP_TYPE_ANY))
+        self.bm_delete = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap(img_delete.string, wx.BITMAP_TYPE_ANY))
         self.static_line_1_copy_1 = wx.StaticLine(self.p_toolbarinf, -1)
-        self.bm_printer = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/printer.png", wx.BITMAP_TYPE_ANY))
-        self.bm_discount = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/discount.png", wx.BITMAP_TYPE_ANY))
-        self.bm_pay = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap("/Users/jyr/Desarrollo/git-projects/japos-client/img/toolbars/pay.png", wx.BITMAP_TYPE_ANY))
+        self.bm_printer = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap(img_printer.string, wx.BITMAP_TYPE_ANY))
+        self.bm_discount = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap(img_discount.string, wx.BITMAP_TYPE_ANY))
+        self.bm_pay = wx.BitmapButton(self.p_toolbarinf, -1, wx.Bitmap(img_pay.string, wx.BITMAP_TYPE_ANY))
 
         self.Bind(wx.EVT_BUTTON, self.cancel, id = self.bm_delete.GetId())
         self.Bind(wx.EVT_BUTTON, self.leave, id = self.bm_leave.GetId())
