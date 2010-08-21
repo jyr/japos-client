@@ -52,45 +52,47 @@ class Opening_view(wx.Panel):
 
     def __set_properties(self):
         # begin wxGlade: Opening.__set_properties
+        self.SetFont(wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.l_opening.SetForegroundColour(wx.Colour(255, 255, 255))
         self.l_opening.SetFont(wx.Font(20, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
         self.static_line_1.SetMinSize((251, 1))
         self.static_line_1.SetBackgroundColour(wx.Colour(255, 255, 255))
         self.p_header.SetBackgroundColour(wx.Colour(47, 47, 47))
-        self.l_pos.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
-        self.cb_pos.SetFont(wx.Font(40, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
+        self.l_pos.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.cb_pos.SetSelection(-1)
-        self.l_cashier.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
+        self.l_cashier.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.cb_cashier.SetSelection(-1)
-        self.l_auditor.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
+        self.l_auditor.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.cb_auditor.SetSelection(-1)
-        self.l_initialfund.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
+        self.l_initialfund.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
+        self.p_inputs.SetMinSize((344, 166))
         # end wxGlade
 
     def __do_layout(self):
         # begin wxGlade: Opening.__do_layout
         s_opening = wx.BoxSizer(wx.VERTICAL)
-        gs_inputs = wx.GridSizer(5, 2, 0, 0)
+        gs_inputs = wx.FlexGridSizer(5, 2, 0, 0)
         s_header = wx.BoxSizer(wx.VERTICAL)
         s_header.Add(self.img_logo, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 10)
         s_header.Add(self.l_opening, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 0)
         s_header.Add(self.static_line_1, 0, wx.ALL|wx.EXPAND, 5)
         self.p_header.SetSizer(s_header)
         s_opening.Add(self.p_header, 0, wx.EXPAND, 0)
-        gs_inputs.Add(self.l_pos, 0, wx.EXPAND, 5)
-        gs_inputs.Add(self.cb_pos, 0, wx.EXPAND, 5)
-        gs_inputs.Add(self.l_cashier, 0, 0, 5)
-        gs_inputs.Add(self.cb_cashier, 0, wx.EXPAND|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        gs_inputs.Add(self.l_auditor, 0, 0, 5)
-        gs_inputs.Add(self.cb_auditor, 0, wx.EXPAND|wx.ALIGN_RIGHT, 5)
-        gs_inputs.Add(self.l_initialfund, 0, 0, 5)
-        gs_inputs.Add(self.tc_initialfund, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5)
+        gs_inputs.Add(self.l_pos, 0, wx.ALL, 3)
+        gs_inputs.Add(self.cb_pos, 0, wx.LEFT|wx.EXPAND, 10)
+        gs_inputs.Add(self.l_cashier, 0, wx.ALL, 3)
+        gs_inputs.Add(self.cb_cashier, 0, wx.LEFT|wx.EXPAND, 10)
+        gs_inputs.Add(self.l_auditor, 0, wx.ALL, 3)
+        gs_inputs.Add(self.cb_auditor, 0, wx.LEFT|wx.EXPAND, 10)
+        gs_inputs.Add(self.l_initialfund, 0, wx.ALL, 3)
+        gs_inputs.Add(self.tc_initialfund, 0, wx.LEFT|wx.EXPAND, 10)
         gs_inputs.Add(self.b_open, 1, wx.ALL|wx.ALIGN_RIGHT, 6)
         self.p_inputs.SetSizer(gs_inputs)
-        s_opening.Add(self.p_inputs, 0, wx.ALL|wx.EXPAND, 10)
+        s_opening.Add(self.p_inputs, 0, wx.ALL, 0)
         self.SetSizer(s_opening)
         s_opening.Fit(self)
         # end wxGlade
+
         
     def OnCreateOpening(self, evt):
 		try:
@@ -105,8 +107,6 @@ class Opening_view(wx.Panel):
 			self.parent.Close()
 		except wx._core.PyAssertionError:
 			self.controller.error()
-        
-
 # end of class Opening
 
 
