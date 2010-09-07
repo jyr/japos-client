@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import sys, os
+PROJECT_DIR = os.getcwd()
 
-sys.path.append("/Users/jyr/Desarrollo/git-projects/japos-client/")
+sys.path.append(PROJECT_DIR)
 
 from django.core.management import setup_environ
 from japos import settings
